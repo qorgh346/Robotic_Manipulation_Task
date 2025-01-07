@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY owl2 "http://www.w3.org/2006/12/owl2#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY owl2xml "http://www.w3.org/2006/12/owl2-xml#" >
+    <!ENTITY knowrob "http://knowrob.org/kb/knowrob.owl#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY arbi "http://www.arbi.com/ontologies/arbi.owl#" >
+    <!ENTITY protege "http://protege.stanford.edu/plugins/owl/protege#" >
+	<!ENTITY srdl2-comp "http://knowrob.org/kb/srdl2-comp.owl#" >
+]>
+
+<rdf:RDF xmlns="http://knowrob.org/kb/ias_semantic_map.owl#"
+     xml:base="http://knowrob.org/kb/ias_semantic_map.owl#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:arbi="http://www.arbi.com/ontologies/arbi_knowrob.owl#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:srdl2-comp="http://knowrob.org/kb/srdl2-comp.owl#"
+     xmlns:knowrob="http://knowrob.org/kb/knowrob.owl#">
+    <owl:Ontology rdf:about="http://knowrob.org/kb/ias_semantic_map.owl#">
+        <owl:imports rdf:resource="package://knowrob_common/owl/knowrob.owl"/>
+    </owl:Ontology>
+>
+
+	<!-- object정의 먼저 인스턴스 이름을 적어두고, 타입, 크기(width, depth, height)-->
+
+	<!-- object들 정의 -->
+	<owl:NamedIndividual rdf:about="&arbi;can_1">
+		<rdf:type rdf:resource="&knowrob;DrinkingCan"/>
+		<knowrob:heightOfObject rdf:datatype="&xsd;double">0.15809</knowrob:heightOfObject>
+		<knowrob:depthOfObject rdf:datatype="&xsd;double">0.080002</knowrob:depthOfObject>
+		<knowrob:widthOfObject rdf:datatype="&xsd;double">0.08</knowrob:widthOfObject>
+	</owl:NamedIndividual>
+
+	<owl:NamedIndividual rdf:about="&arbi;cup_1">
+		<rdf:type rdf:resource="&knowrob;Cup"/>
+		<knowrob:heightOfObject rdf:datatype="&xsd;double">0.1</knowrob:heightOfObject>
+		<knowrob:depthOfObject rdf:datatype="&xsd;double">0.1012</knowrob:depthOfObject>
+		<knowrob:widthOfObject rdf:datatype="&xsd;double">0.081030</knowrob:widthOfObject>
+	</owl:NamedIndividual>
+
+	<owl:NamedIndividual rdf:about="&arbi;bear_1">
+		<rdf:type rdf:resource="&knowrob;Bear"/>
+		<knowrob:heightOfObject rdf:datatype="&xsd;double">0.145</knowrob:heightOfObject>
+		<knowrob:depthOfObject rdf:datatype="&xsd;double">0.12376</knowrob:depthOfObject>
+		<knowrob:widthOfObject rdf:datatype="&xsd;double">0.11213</knowrob:widthOfObject>
+	</owl:NamedIndividual>
+
+	<owl:NamedIndividual rdf:about="&arbi;box_can">
+		<rdf:type rdf:resource="&knowrob;Box-Container"/>
+		<knowrob:heightOfObject rdf:datatype="&xsd;double">0.080088</knowrob:heightOfObject>
+		<knowrob:depthOfObject rdf:datatype="&xsd;double">0.19197</knowrob:depthOfObject>
+		<knowrob:widthOfObject rdf:datatype="&xsd;double">0.25599</knowrob:widthOfObject>
+	</owl:NamedIndividual>
+
+	<owl:NamedIndividual rdf:about="&arbi;box_cup">
+		<rdf:type rdf:resource="&knowrob;Box-Container"/>
+		<knowrob:heightOfObject rdf:datatype="&xsd;double">0.080088</knowrob:heightOfObject>
+		<knowrob:depthOfObject rdf:datatype="&xsd;double">0.19197</knowrob:depthOfObject>
+		<knowrob:widthOfObject rdf:datatype="&xsd;double">0.25599</knowrob:widthOfObject>
+	</owl:NamedIndividual>
+
+	<owl:NamedIndividual rdf:about="&arbi;box_bear">
+		<rdf:type rdf:resource="&knowrob;Box-Container"/>
+		<knowrob:heightOfObject rdf:datatype="&xsd;double">0.080088</knowrob:heightOfObject>
+		<knowrob:depthOfObject rdf:datatype="&xsd;double">0.19197</knowrob:depthOfObject>
+		<knowrob:widthOfObject rdf:datatype="&xsd;double">0.25599</knowrob:widthOfObject>
+	</owl:NamedIndividual>
+
+	<!-- Rack정의 (Rack + Shelf)-->
+	<owl:NamedIndividual rdf:about="&arbi;table_target">
+		<rdf:type rdf:resource="&knowrob;TableArea"/>
+		<knowrob:heightOfObject rdf:datatype="&xsd;double">0.4</knowrob:heightOfObject>
+		<knowrob:depthOfObject rdf:datatype="&xsd;double">0.9</knowrob:depthOfObject>
+		<knowrob:widthOfObject rdf:datatype="&xsd;double">0.6</knowrob:widthOfObject>
+		<knowrob:eventOccursAt rdf:resource="&arbi;rotMat3D_table_target"/>
+		<knowrob:mainColorObject rdf:resource="&knowrob;PurpleColor"/>
+	</owl:NamedIndividual>
+
+	<owl:NamedIndividual rdf:about="&arbi;table_box">
+		<rdf:type rdf:resource="&knowrob;TableArea"/>
+		<knowrob:heightOfObject rdf:datatype="&xsd;double">0.5</knowrob:heightOfObject>
+		<knowrob:depthOfObject rdf:datatype="&xsd;double">0.6</knowrob:depthOfObject>
+		<knowrob:widthOfObject rdf:datatype="&xsd;double">0.9</knowrob:widthOfObject>
+		<knowrob:eventOccursAt rdf:resource="&arbi;rotMat3D_table_box"/>
+		<knowrob:mainColorObject rdf:resource="&knowrob;PurpleColor"/>
+	</owl:NamedIndividual>
+</rdf:RDF>

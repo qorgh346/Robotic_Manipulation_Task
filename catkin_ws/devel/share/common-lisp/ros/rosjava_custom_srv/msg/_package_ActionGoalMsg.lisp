@@ -1,0 +1,20 @@
+(cl:in-package rosjava_custom_srv-msg)
+(cl:export '(TARGETBODY-VAL
+          TARGETBODY
+          ACTIONTYPE-VAL
+          ACTIONTYPE
+          OBJECT-VAL
+          OBJECT
+          JOINT_CONSTRAINTS-VAL
+          JOINT_CONSTRAINTS
+          POSITION_CONSTRAINTS-VAL
+          POSITION_CONSTRAINTS
+          ORIENTATION_CONSTRAINTS-VAL
+          ORIENTATION_CONSTRAINTS
+          VISIBILITY_CONSTRAINTS-VAL
+          VISIBILITY_CONSTRAINTS
+          TARGETPOSE-VAL
+          TARGETPOSE
+          TARGETJOINTSTATE-VAL
+          TARGETJOINTSTATE
+))

@@ -1,0 +1,8 @@
+prefix=/home/test/Downloads/190816_cmtm_code/catkin_ws/devel
+
+Name: context_manager_pkg
+Description: Description of context_manager_pkg
+Version: 0.1.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

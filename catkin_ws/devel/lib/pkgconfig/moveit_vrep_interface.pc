@@ -1,0 +1,8 @@
+prefix=/home/test/Downloads/190816_cmtm_code/catkin_ws/devel
+
+Name: moveit_vrep_interface
+Description: Description of moveit_vrep_interface
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

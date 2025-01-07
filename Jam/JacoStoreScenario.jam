@@ -1,0 +1,1208 @@
+OBSERVER : {
+   // TODO: 월드모델에서 모든 FACT 삭제 후 FSD 요청
+   FACT ProtocolManager($protocolManager);
+   RETRACT currentObjectPose($object, $objectPose);
+   RETRACT currentRobotBodyPose($robot, $robotPose);
+   RETRACT currentHandPose($hand, $handPose);
+   RETRACT empty_hand($empty_hand);
+   RETRACT opened_hand($opened_hand);
+   RETRACT closed_hand($closed_hand);
+   RETRACT graspedBy($graspedBy);
+
+   //System.out.println("-1-");
+   $protocolManager.requestFullStateDescription("currentRobotBodyPose", "Var1", "Var2", "", "");
+   //System.out.println("-2-");
+   $protocolManager.requestFullStateDescription("currentHandPose", "Var1", "Var2", "", "");
+   //System.out.println("-3-");
+   $protocolManager.requestFullStateDescription("currentObjectPose", "Var1", "Var2", "", "");
+   //System.out.println("-4-");
+   $protocolManager.requestFullStateDescription("empty_hand", "Var1", "", "", "");
+   //System.out.println("-5-");
+   $protocolManager.requestFullStateDescription("opened_hand", "Var1", "", "", "");
+   //System.out.println("-6-");
+   $protocolManager.requestFullStateDescription("closed_hand", "Var1", "", "", "");
+   //System.out.println("-7-");
+   $protocolManager.requestFullStateDescription("graspedBy", "Var1", "Var2", "", "");
+   //System.out.println("-8-");
+
+   WHILE : FACT misPlaced_item($misplacedItem)
+   {
+    	// System.out.println("check misPlaced_item(" + $misplacedItem + ")");
+		RETRACT misPlaced_item($misplacedItem);
+		RETRACT switch_misPlaced($bool);
+		ASSERT switch_misPlaced("false");
+		WHEN : FACT goal_misPlaced($misplacedItem)
+		{
+			UPDATE (switch_misPlaced("false")) (switch_misPlaced("true"));
+		};
+		WHEN : FACT switch_misPlaced("false") 
+		{
+			System.out.println("<<< 잘못 배치된 상품이 있어 재배치 목표를 생성하였습니다 : " + $misplacedItem + ">>>");
+			POST PERFORM ReplaceItemOnTheShelf($robot, $hand, $misplacedItem, $plane) :UTILITY 5;
+			ASSERT goal_misPlaced($misplacedItem);
+		};    
+   };
+
+   WHEN : FACT bringAnItem($itemType)
+	{
+		RETRACT bringAnItem($itemType);
+		FACT type($robot, "'http://knowrob.org/kb/knowrob.owl#Leg'");
+		FACT type($hand, "'http://knowrob.org/kb/knowrob.owl#Hand'");
+		FACT type($counter, "'http://knowrob.org/kb/knowrob.owl#ShelfInABuilding'");
+		System.out.println("<<< Bring an item goal : " + $itemType + " >>>");
+		FACT no($no);
+		POST PERFORM BringAnItem($robot, $hand, $itemType, "shelf", $counter, $no) :UTILITY 20;
+		UPDATE (no($no)) (no($no + 1));
+	};
+
+   System.out.println("==============================================================");
+   //$protocolManager.requestFullStateDescription("displayShelfFor", "Var1", "Var2", "", "");
+   
+   //objectAt --> ("currentRobotBodyPose", "Var1", "Var2", "", "");
+   //objectAt --> ("currentHandPose", "Var1", "Var2", "", "");
+   //objectAt --> ("currentObjectPose", "Var1", "Var2", "", "");
+
+   // TODO: 아래 두 서술자는 모니터로 등록해야 됨
+   //$protocolManager.requestFullStateDescription("misplaced-item", "Var1", "", "", "");
+   //$protocolManager.requestFullStateDescription("empty-displayShelf", "Var1", "", "", "");
+}
+
+GOALS :
+	PERFORM JacoStoreScenario() :UTILITY 1;
+
+FACTS :
+	// storagePlaceFor의 아이디어를 빌림
+	FACT displayShelfFor("chipsCanShelf01", "ChipsCan"); 
+	FACT displayShelfFor("tomatoSoupCanShelf01", "TomatoSoupCan");
+		
+	FACT timeStamp(System.currentTimeMillis());
+
+    //FACT standardHandPose("jacoHand01", "[1.735, 0.343, ...]");
+    
+    FACT notFoundSwitch("off");
+    FACT obstructSwitch("off");
+    
+	FACT shelf("shelf");
+	FACT storage("storage");
+	FACT power("on");
+    FACT stuffNo(1);
+    FACT cycle_number(1);
+	FACT no(1);
+    
+PLAN PERFORM JacoStoreScenario(){
+
+BODY :
+	// FACT ProtocolManager($protocolManager);
+	// $protocolManager.requestPlanTopic("JacoStoreScenario");
+	System.out.println("\n----------> Start  JacoStoreScenario");
+	System.out.println("Parameters : ");
+	
+	FACT ProtocolManager($protocolManager);
+	$protocolManager.requestFullStateDescription("type", "Var1", "Var2", "", "");
+
+	WHILE : FACT power("on")
+	{
+		System.out.println("\n-----------> waiting for command");
+		$protocolManager.requestDelay("2000");
+	};
+
+    System.out.println("\n----------> Finished  JacoStoreScenario");
+UTILITY : 
+	1;
+}
+
+PLAN PERFORM BringAnItem($robot, $hand, $itemType, $shelf, $counter, $no){
+PRECONDITION :
+	FACT type($robot, "'http://knowrob.org/kb/knowrob.owl#Leg'");
+	FACT type($hand, "'http://knowrob.org/kb/knowrob.owl#Hand'");
+	FACT type($counter, "'http://knowrob.org/kb/knowrob.owl#ShelfInABuilding'");
+	FACT shelf($shelf);
+	FACT ProtocolManager($protocolManager);
+	
+BODY :
+	// $protocolManager.requestPlanTopic("BringAnItemFromDisplay");
+	System.out.println("\n----------> Start  BringAnItem");
+	System.out.println("Parameter : " + $robot + "\n" + $hand + "\n" + $itemType + "\n" + $shelf + "\n" + $counter + "\n" + $no);
+	
+	System.out.println("<<<  Jaco moves to the standard pose. >>>");
+	$result = $protocolManager.requestStandardArm();
+
+	FACT Scanner($sc);
+	System.out.println("<<< 주문 처리 계획을 실행합니다(" + $itemType + ", " + $shelf + ") >>>");
+	// $sc.next();
+	
+	FACT Scanner($sc);
+	System.out.println("<<< 기본 동작의 실현 가능성 검증을 해야합니다(detectableBasePose, validBasePath). >>>");
+	// $sc.next();
+	
+	$protocolManager.requestPoseGeneration("detectableBasePose", $robot, $shelf, "detectableBasePoses", "");
+	FACT detectableBasePose($robot, $shelf, $detectableBasePoses); 
+	FACT currentRobotBodyPose($robot, $currentPose1);
+	$result = $protocolManager.requestMotionPlanning("validBasePath", $robot, $currentPose1, $detectableBasePoses, "");
+	FACT validBasePath($robot, $newCurrentPose1, $detectableBasePose);
+	PERFORM MoveBaseForDetection($robot, $shelf, $newCurrentPose1, $detectableBasePose);
+	
+	RETRACT type($var1, $var2);
+	$protocolManager.requestFullStateDescription("type", "Var1", "Var2", "", "");
+
+	RETRACT on_Physical($Var1, $Var2);
+	$protocolManager.requestFullStateDescription("on_Physical", "Var1", "Var2", "", "");
+	$protocolManager.requestFullStateDescription("misPlaced_item", "Var1", "", "", "");
+
+	ASSERT switch_exist("false");
+
+	WHILE : FACT type($anyItem, $itemType) 
+	{
+		RETRACT type($anyItem, $itemType);
+		System.out.println("item : " + $anyItem + " check");
+		WHEN : FACT on_Physical($anyItem, "'http://www.arbi.com/ontologies/arbi.owl#displayRack_1'")
+		{
+			System.out.println($anyItem + "is on displayRack");
+			UPDATE (switch_exist("false")) (switch_exist("true"));
+			ASSERT move_item($anyItem);
+		};
+	};
+
+	WHEN : FACT switch_exist("false") // object is not exist...
+	{
+		System.out.println("<<< Object is not exist. Go to storage.  >>>");
+		POST PERFORM BringAnItem($robot, $hand, $itemType, "storage", $counter, $no); // post new goal
+		POST PERFORM StuffItemToTheShelfFromTheStorage($robot, $hand, $itemType, "storage", "shelf", $no);
+		UNPOST PERFORM BringAnItem($robot, $hand, $itemType, $shelf, $counter, $no); // unpost past goal
+	};
+
+	RETRACT switch_exist($exist);
+	FACT move_item($item);
+	RETRACT move_item($allItem);
+
+	FACT on_Physical($item, $itemShelf);
+	System.out.println("item instance : " + $item);
+	System.out.println("shelf instance : " + $itemShelf);
+	
+	FACT Scanner($sc);
+	System.out.println("<<< 기본 동작의 실현 가능성 검증을 해야합니다(rechableBasePose, validBasePath). >>>");
+	// $sc.next();
+	
+	$protocolManager.requestPoseGeneration("reachableBasePose", $robot, $item, "reachableBasePoses", "");
+	FACT reachableBasePose($robot, $item, $reachableBasePoses);
+	FACT currentRobotBodyPose($robot, $currentPose2);
+	$result = $protocolManager.requestMotionPlanning("validBasePath", $robot, $currentPose2, $reachableBasePoses, "");
+	FACT validBasePath($robot, $newCurrentPose2, $reachableBasePose);
+	PERFORM MoveBaseForPickUp($robot, $item, $newCurrentPose2, $reachableBasePose);
+
+	PERFORM PickUpAnObjectFromPlane($robot, $hand, $item, $itemShelf);
+	
+	FACT Scanner($sc);
+	System.out.println("<<< 기본 동작의 실현 가능성 검증을 해야합니다(placeableBasePose, validBasePath). >>>");
+	// $sc.next();
+	
+	$protocolManager.requestPoseGeneration("placeableBasePose", $robot, $item, "placeableBasePoses", "");
+	FACT placeableBasePose($robot, $item, $placeableBasePoses);
+	FACT currentRobotBodyPose($robot, $currentPose3);
+	$result = $protocolManager.requestMotionPlanning("validBasePath", $robot, $currentPose3, $placeableBasePoses, "");
+	FACT validBasePath($robot, $newCurrentPose3, $placeableBasePose);
+	PERFORM MoveBaseForPutDown($robot, $item, $newCurrentPose3, $placeableBasePose);
+	
+	PERFORM PutDownAnObjectOnPlane($robot, $hand, $item, $counter);
+	
+	System.out.println("<<<  Jaco moves to the standard pose. >>>");
+	$result = $protocolManager.requestStandardArm();
+
+	System.out.println("----------> Finished  BringAnItem\n");
+	
+FAILURE:
+	
+	WHEN : IS_TRUE($shelf == "shelf01")
+	{
+		System.out.println("\n/*****************************************/");
+		System.out.println("/****Fail: ChipsCan is not on the shelf***/");
+		System.out.println("PERFORM BringAnItem(" + $robot + " " + $hand + " " + $itemType + " " + $shelf + " " + $counter + " " + $no + ")");
+		System.out.println("/*****************************************/");
+		
+		POST PERFORM BringAnItem($robot, $hand, $itemType, "storage01", $counter, $no) :UTILITY 100;
+		
+		System.out.println("\n/*****************************************/");
+		System.out.println("/*New Goal: find and bring item from storage*/");
+		System.out.println("PERFORM BringAnItem(" + $robot + " " + $hand + " " + $itemType + " " + "storage01" + " " + $counter + " " + $no + ")");
+		System.out.println("/*****************************************/");
+		
+		FACT Scanner($sc);
+		System.out.println("<<< 진열대에 상품이 없어서 보관대에서 가져와야 합니다. 진행하시겠습니까? (y/n) >>>");
+		// // $sc.next();
+
+	};
+
+UTILITY:
+	20;
+}
+
+PLAN PERFORM BringAnItem($robot, $hand, $itemType, $storage, $counter, $no){
+PRECONDITION :
+	FACT type($robot, "'http://knowrob.org/kb/knowrob.owl#Leg'");
+	FACT type($hand, "'http://knowrob.org/kb/knowrob.owl#Hand'");
+	FACT type($counter, "'http://knowrob.org/kb/knowrob.owl#ShelfInABuilding'");
+	FACT storage($storage);
+	FACT ProtocolManager($protocolManager);
+	
+BODY :
+	// $protocolManager.requestPlanTopic("BringAnItemFromStorage");
+	System.out.println("\n----------> Start  BringAnItem (from Storage)");
+	
+	System.out.println("Parameter : " + $robot + " " + $hand + " " + $itemType + " " + $storage + " " + $counter + " " + $no);
+
+	System.out.println("<<<  Jaco moves to the standard pose. >>>");
+	$result = $protocolManager.requestStandardArm();
+
+	FACT Scanner($sc);
+	System.out.println("<<< 주문 처리 계획을 실행합니다(" + $itemType + ", " + $storage + "). >>>");
+	// $sc.next();
+
+	FACT Scanner($sc);
+	System.out.println("<<< 기본 동작의 실현 가능성 검증을 해야합니다(detectableBasePose, validBasePath). >>>");
+	// $sc.next();
+	
+	$protocolManager.requestPoseGeneration("detectableBasePose", $robot, $storage, "detectableBasePoses", "");
+	FACT detectableBasePose($robot, $storage, $detectableBasePoses); 
+	FACT currentRobotBodyPose($robot, $currentPose1);
+	$result = $protocolManager.requestMotionPlanning("validBasePath", $robot, $currentPose1, $detectableBasePoses, "");
+	FACT validBasePath($robot, $newCurrentPose1, $detectableBasePose);
+	PERFORM MoveBaseForDetection($robot, $storage, $newCurrentPose1, $detectableBasePose);
+
+	RETRACT type($var1, $var2);
+	$protocolManager.requestFullStateDescription("type", "Var1", "Var2", "", "");
+
+	RETRACT on_Physical($Var1, $Var2);
+	$protocolManager.requestFullStateDescription("on_Physical", "Var1", "Var2", "", "");
+
+	WHEN : FACT on_Physical("'http://www.arbi.com/ontologies/arbi.owl#water_bottle_3'", $itemShelf)
+	{
+		$item = "'http://www.arbi.com/ontologies/arbi.owl#water_bottle_3'";
+	};
+
+	WHEN : FACT on_Physical("'http://www.arbi.com/ontologies/arbi.owl#water_bottle_2'", $itemShelf)
+	{
+		$item = "'http://www.arbi.com/ontologies/arbi.owl#water_bottle_2'";
+	};
+
+	FACT on_Physical($item, $itemShelf);
+	System.out.println("item instance : " + $item);
+	System.out.println("shelf instance : " + $itemShelf);
+
+	WHEN : IS_TRUE($item == "'http://www.arbi.com/ontologies/arbi.owl#water_bottle_3'")  // find obstructs!  
+	{
+		System.out.println("<<< start clearing obstacle. >>>");
+
+		FACT Scanner($sc);
+		System.out.println("<<< 기본 동작의 실현 가능성 검증을 해야합니다(reachableBasePose, validBasePath). >>>");
+		// $sc.next();
+	
+		$protocolManager.requestPoseGeneration("reachableBasePose", $robot, "obstacle", "reachableBasePoses", "");
+		FACT reachableBasePose($robot, $obstacle, $reachableBasePoses);
+		FACT currentRobotBodyPose($robot, $currentPose5);
+		$result = $protocolManager.requestMotionPlanning("validBasePath", $robot, $currentPose5, $reachableBasePoses, "");
+		FACT validBasePath($robot, $newCurrentPose5, $reachableBasePose);
+		PERFORM MoveBaseForPickUp($robot, $obstacle, $newCurrentPose5, $reachableBasePose);
+	
+		PERFORM ClearAnObstacleOnPlane($robot, $hand, $obstacle, $item, $storage);
+	
+		System.out.println("/*****************************************/");
+		System.out.println("/***********Clearance Complete************/");
+		System.out.println("/*****************************************/");
+	
+		FACT Scanner($sc);
+		System.out.println("<<< 장애물을 치웠습니다. >>>");
+		// $sc.next();
+	};
+	
+	WHEN : IS_TRUE($item == "'http://www.arbi.com/ontologies/arbi.owl#water_bottle_2'")  // find obstructs!  
+	{
+	$protocolManager.requestPoseGeneration("reachableBasePose", $robot, $item, "reachableBasePoses", "");
+	FACT reachableBasePose($robot, $item, $reachableBasePoses);
+	FACT currentRobotBodyPose($robot, $currentPose2);
+	$result = $protocolManager.requestMotionPlanning("validBasePath", $robot, $currentPose2, $reachableBasePoses, "");
+	FACT validBasePath($robot, $newCurrentPose2, $reachableBasePose);
+	PERFORM MoveBaseForPickUp($robot, $item, $newCurrentPose2, $reachableBasePose);
+	};
+	
+	PERFORM PickUpAnObjectFromPlane($robot, $hand, $item, $itemShelf);
+	
+	FACT Scanner($sc);
+	System.out.println("<<< 기본 동작의 실현 가능성 검증을 해야합니다(middleBasePose, validBasePath). >>>");
+	// $sc.next();
+	
+	$protocolManager.requestPoseGeneration("middleBasePose", $robot, $item, "middleBasePoses", "");
+	FACT middleBasePose($robot, $item, $middleBasePoses);
+	FACT currentRobotBodyPose($robot, $currentPose3);
+	$result = $protocolManager.requestMotionPlanning("validBasePath", $robot, $currentPose3, $middleBasePoses, "");
+	FACT validBasePath($robot, $newCurrentPose3, $middleBasePose);
+	PERFORM MoveBaseForMiddlePoint($robot, $item, $newCurrentPose3, $middleBasePose);
+
+	FACT Scanner($sc);
+	System.out.println("<<< 기본 동작의 실현 가능성 검증을 해야합니다(placeableBasePose, validBasePath). >>>");
+	// $sc.next();
+	
+	$protocolManager.requestPoseGeneration("placeableBasePose", $robot, $item, "placeableBasePoses", "");
+	FACT placeableBasePose($robot, $item, $placeableBasePoses);
+	FACT currentRobotBodyPose($robot, $currentPose4);
+	$result = $protocolManager.requestMotionPlanning("validBasePath", $robot, $currentPose4, $placeableBasePoses, "");
+	FACT validBasePath($robot, $newCurrentPose4, $placeableBasePose);
+	PERFORM MoveBaseForPutDown($robot, $item, $newCurrentPose4, $placeableBasePose);
+	
+	PERFORM PutDownAnObjectOnPlane($robot, $hand, $item, $counter);
+	
+	System.out.println("<<<  Jaco moves to the standard pose. >>>");
+	$result = $protocolManager.requestStandardArm();
+
+	System.out.println("----------> Finished  BringAnItem from storage\n");
+
+UTILITY:
+	30;
+}
+
+PLAN PERFORM MoveBaseForDetection($robot, $item, $newInitialBasePose, $detectableBasePose){
+PRECONDITION :
+	FACT type($robot, "'http://knowrob.org/kb/knowrob.owl#Leg'");
+	FACT type($plane, "'http://knowrob.org/kb/knowrob.owl#ShelfInABuilding'");
+	FACT detectableBasePose($robot, $item, $detectableBasePoses);
+	FACT validBasePath($robot, $newInitialBasePose, $detectableBasePose);
+	FACT ProtocolManager($protocolManager);
+	
+BODY :
+	// $protocolManager.requestPlanTopic("MoveBaseForDetection");
+	System.out.println("\n----------> Start  MoveBaseForDetection");
+	System.out.println("Parameter : " + $robot + "\n" + $item + "\n" + $newInitialBasePose + "\n" + $detectableBasePose);
+
+	FACT Scanner($sc);
+	System.out.println("<<< 실현 가능성 검증되었습니다. 이 기본 동작을 실행하시겠습니까? (y/n) >>>");
+	// $sc.next();
+	
+	$result = $protocolManager.requestMoveBase($detectableBasePose);
+
+	System.out.println("----------> Finished  MoveBaseForDetection\n");
+	
+EFFECTS:
+	// RETRACT robotAt($robot, $y);
+	RETRACT detectableBasePose($robot, $item, $detectableBasePoses);
+	RETRACT validBasePath($robot, $newInitialBasePose, $x);
+	// ASSERT robotAt($robot, $detectableBasePose);
+}
+
+PLAN PERFORM FindingAPhysicalObject($robot, $item, $plane){
+PRECONDITION :
+	FACT type($robot, "'http://knowrob.org/kb/knowrob.owl#Leg'");
+	FACT type($plane, "'http://knowrob.org/kb/knowrob.owl#ShelfInABuilding'");
+	
+BODY :
+	System.out.println("\n----------> Start  FindingAPhysicalObject");
+	System.out.println("Parameter : " + $robot + "\n" + $item + "\n" + $plane);
+	
+	FACT Scanner($sc);
+	System.out.println("<<< 이 기본 동작을 실행하시겠습니까? (y/n) >>>");
+	// $sc.next();
+	 
+	WHEN : IS_TRUE($plane == "shelf01")
+	{
+	    // TODO: CM으로부터 받아와야 함
+		WHEN : FACT notFoundSwitch("on")
+		{
+			RETRACT notFoundSwitch("on");
+			
+			System.out.println("\n/*****************************************/");
+			System.out.println("/*Special Issue: there are no items*/");
+			System.out.println("/*****************************************/");
+	    	
+	    	FACT empty-hand($hand);
+	    	System.out.println("\n/*****************************************/");
+			System.out.println("/*New Goal: replace item from storage*/");
+			System.out.println("PERFORM StuffItemToTheShelfFromTheStorage(" + $robot + " " + $hand + " ChipsCan " + " storage01 " + " shelf01" + ")");
+	    	System.out.println("\n/*****************************************/");
+			
+			ASSERT typed-empty-shelf("chipsCanShelf01", "shelf01");
+			
+			// 선반에 상품이 없을 시 채우기 Goal 생성
+			// TODO: 리스트로 받아와 처리하는 방법 모색
+			WHILE: FACT typed-empty-shelf($emptyShelf, "shelf01")
+			{
+			    RETRACT typed-empty-shelf($emptyShelf, "shelf01");
+			    
+			    // TODO: 2번 POST 해야 함
+			    FACT displayShelfFor($emptyShelf, $itemType_); 
+			    FACT stuffNo($no);
+			    POST PERFORM StuffItemToTheShelfFromTheStorage($robot, $hand, $itemType_, "storage01", "shelf01", $no) :UTILITY 1;
+			    //$no_ = $no + 1;
+			    //POST PERFORM StuffItemToTheShelfFromTheStorage($robot, $hand, $itemType_, "storage01", "shelf01", $no_) :UTILITY 1;
+			    //$no_ = $no + 2;
+			    //UPDATE (stuffNo($no)) (stuffNo($no_));
+			};
+	    	
+			FAIL;
+		};
+		
+		// TODO: CM으로부터 받아와야 함 : type 사용
+		WHEN : FACT notFoundSwitch("off")
+		{
+			ASSERT type("chipsCan01", $item);
+	    	ASSERT objectAt("chipsCan01", "[0.382, 4.382, ...]");
+	    	ASSERT on-Physical("chipsCan01", $plane);
+	    	ASSERT on-Physical("chipsCan01", "chipsCanAreaOfshelf01");
+	    
+	    	ASSERT type("tomatoSoupCan01", "TomatoSoupCan");
+	    	ASSERT objectAt("tomatoSoupCan01", "[0.382, 4.382, ...]");
+	    	ASSERT on-Physical("tomatoSoupCan01", $plane);
+	    	ASSERT on-Physical("tomatoSoupCan01", "tomatoSoupCanAreaOfshelf01");
+	    
+	    	ASSERT type("tomatoSoupCan02", "TomatoSoupCan");
+	    	ASSERT objectAt("tomatoSoupCan02", "[0.382, 4.382, ...]");
+	    	ASSERT on-Physical("tomatoSoupCan02", $plane);
+	    	ASSERT on-Physical("tomatoSoupCan02", "chipsCanAreaOfshelf01");
+	    	
+	    	//ASSERT misplaced-item("tomatoSoupCan02");
+	    	
+	    	UPDATE (notFoundSwitch("off")) (notFoundSwitch("on"));
+	    	
+	    	System.out.println("\n/*****************************************/");
+			System.out.println("/*Special Issue: wrong placement is detected*/");
+			System.out.println("/*****************************************/");
+	    	
+	    	// TODO: '남는 손이 있으면'으로 수정해야 함
+	    	FACT empty-hand($hand);
+	    	System.out.println("\n/*****************************************/");
+			System.out.println("/*New Goal: replace item from storage*/");
+			System.out.println("PERFORM ReplaceItemOnTheShelf(" + $robot + " " + $hand + " " + $item + " " + $plane + ")");
+			System.out.println("/*****************************************/");
+			
+
+			// 잘못 배치된 상품이 있으면 재배치 Goal 생성
+			WHILE : FACT misplaced-item($misplacedItem)
+			{
+			    //System.out.println("FACT misplaced-item(" + $misplacedItem + ")");
+			    RETRACT misplaced-item($misplacedItem);
+			    
+			   	FACT Scanner($sc);
+				System.out.println("<<< 잘못 배치된 상품이 있어 재배치 목표를 생성하였습니다. >>>");
+				// // $sc.next();
+			    
+			    POST PERFORM ReplaceItemOnTheShelf($robot, $hand, $misplacedItem, $plane) :UTILITY 2;
+			};
+		};
+	};
+
+	WHEN : IS_TRUE($plane == "storage01")
+	{
+	    // TODO: CM으로부터 받아와야 함
+	    WHEN : FACT obstructSwitch("off")
+	    {
+        	ASSERT type("chipsCan02", "ChipsCan");
+    		ASSERT type("chipsCan03", "ChipsCan");
+			ASSERT type("crackerBox01", "CrackerBox");
+			ASSERT on-Physical("chipsCan02", $plane);
+			ASSERT on-Physical("chipsCan03", $plane);
+			ASSERT on-Physical("crackerBox01", $plane);
+			ASSERT objectAt("chipsCan02", "[1.342, 0.394, ...]");
+			ASSERT objectAt("chipsCan03", "[3.054, 1.737, ...]");
+			ASSERT objectAt("crackerBox01", "[0.981, 0.374, ...]");
+			UPDATE (obstructSwitch("off")) (obstructSwitch("on"));
+		};
+		
+	};
+
+	System.out.println("----------> Finished  FindingAPhysicalObject\n");
+}
+
+PLAN PERFORM MoveBaseForPickUp($robot, $item, $newDetectableBasePose, $reachableBasePose){
+PRECONDITION :
+	FACT type($robot, "'http://knowrob.org/kb/knowrob.owl#Leg'");
+	FACT reachableBasePose($robot, $item, $reachableBasePoses);
+	FACT validBasePath($robot, $newDetectableBasePose, $reachableBasePose);
+	FACT ProtocolManager($protocolManager);
+	
+BODY :
+	// $protocolManager.requestPlanTopic("MoveBaseForPickUp");
+	System.out.println("\n----------> Start  MoveBaseForPickUp");
+	System.out.println("Parameter : " + $robot + "\n" + $item + "\n" + $newDetectableBasePose + "\n" + $reachableBasePose);
+
+	FACT Scanner($sc);
+	System.out.println("<<< 실현 가능성이 검증되었습니다. 이 기본 동작을 실행하시겠습니까? (y/n) >>>");
+	// $sc.next();
+
+	$result = $protocolManager.requestMoveBase($reachableBasePose);
+
+	System.out.println("----------> Finished  MoveBaseForPickUp\n");
+	
+EFFECTS:
+	RETRACT reachableBasePose($robot, $item, $reachableBasePoses);
+	RETRACT validBasePath($robot, $newDetectableBasePose, $x);
+}
+
+PLAN PERFORM PickUpAnObjectFromPlane($robot, $hand, $item, $plane){
+PRECONDITION :
+	FACT type($robot, "'http://knowrob.org/kb/knowrob.owl#Leg'");
+	FACT type($hand, "'http://knowrob.org/kb/knowrob.owl#Hand'");
+	// FACT type($plane, "'http://knowrob.org/kb/knowrob.owl#ShelfInABuilding'");
+	FACT on_Physical($item, $plane);
+	FACT ProtocolManager($protocolManager);
+	
+BODY :
+	// $protocolManager.requestPlanTopic("PickUpAnObjectFromPlane");
+	System.out.println("\n----------> Start  PickUpAnObjectFromPlane");
+	System.out.println("Parameter : " + $robot + "\n" + $hand + "\n" + $item + "\n" + $plane);
+	
+	FACT Scanner($sc);
+	System.out.println("<<< 기본 동작의 실현 가능성 검증을 해야합니다(preGraspHandPose, validArmPath). >>>");
+	// $sc.next();
+	
+	//$preGraspHandPose = $protocolManager.requestPoseGeneration("preGraspHandPose", $hand, $item, $objectLocation, "preGraspHandPose");
+	//$protocolManager.requestPoseGeneration("preGraspHandPose", $hand, $item, $objectLocation, "preGraspHandPoses");
+	//FACT preGraspHandPose($hand, $item, $objectLocation, $preGraspHandPoses);
+	$protocolManager.requestPoseGeneration("preGraspHandPose", $hand, $item, "preGraspHandPoses", "");
+	FACT preGraspHandPose($hand, $item, $preGraspHandPoses);
+	//TODO: if TAMP Interface is implemented, switch is removed
+	WHEN : FACT obstructSwitch("on")
+	{
+		//UPDATE (obstructSwitch("on")) (obstructSwitch("off"));
+		RETRACT obstructSwitch("on");
+		$result = $protocolManager.requestMotionPlanning("validArmPath", $hand, $initialHandPose, $preGraspHandPoses, "obstructs");
+		FAIL;
+	};
+	FACT currentHandPose($hand, $currentHandPose1);
+	$result = $protocolManager.requestMotionPlanning("validArmPath", $hand, $currentHandPose1, $preGraspHandPoses, "");
+	FACT validArmPath($hand, $newCurrentHandPose1, $preGraspHandPose);
+	PERFORM ReachForSomethingWithHand($robot, $hand, $item, $plane, $newCurrentHandPose1, $preGraspHandPose);
+	
+	PERFORM TakeSomething($robot, $hand, $item, $plane);
+	System.out.println("----------> Finished  PickUpAnObjectFromPlane\n");
+
+	RETRACT on_Physical($item, $plane);
+FAILURE:
+	System.out.println("\n/*****************************************/");
+	System.out.println("/*******Fail: obstructed chipsCan*********/");
+	System.out.println("/*****************************************/");
+	
+	System.out.println("\n/*****************************************/");
+	System.out.println("/**Re-planning: clear obstacle and bring chipsCan**/");
+	System.out.println("/*****************************************/");
+	RETRACT preGraspHandPose($hand, $item, $objectLocation, $preGraspHandPose);
+	
+	FACT Scanner($sc);
+	System.out.println("<<< 장애물이 발견되어 재계획을 발생시켰습니다. >>>");
+	// $sc.next();
+
+EFFECTS:
+	// RETRACT obstructs($item, $otherItems);
+}
+
+PLAN PERFORM ReachForSomethingWithHand($robot, $hand, $item, $plane, $newInitialHandPose, $preGraspHandPose){
+PRECONDITION :
+	FACT type($robot, "'http://knowrob.org/kb/knowrob.owl#Leg'");
+	FACT type($hand, "'http://knowrob.org/kb/knowrob.owl#Hand'");
+	// FACT type($plane, "'http://knowrob.org/kb/knowrob.owl#ShelfInABuilding'");
+	FACT on_Physical($item, $plane);
+	FACT preGraspHandPose($hand, $item, $preGraspHandPoses);
+	FACT validArmPath($hand, $newInitialHandPose, $preGraspHandPose);
+	FACT ProtocolManager($protocolManager);
+	
+BODY :
+	// $protocolManager.requestPlanTopic("ReachForSomethingWithHand");
+	System.out.println("\n----------> Start  ReachForSomethingWithHand");
+	System.out.println("Parameter : " + $robot + "\n" + $hand + "\n" + $item + "\n" + $plane + "\n" + $newInitialHandPose + "\n" + $preGraspHandPose);
+
+	FACT Scanner($sc);
+	System.out.println("<<< 실현 가능성이 검증되었습니다. 이 기본 동작을 실행하시겠습니까? (y/n) >>>");
+	// $sc.next();
+
+	$result = $protocolManager.requestMoveArm($preGraspHandPose);
+	
+	System.out.println("----------> Finished  ReachForSomethingWithHand\n");
+	
+EFFECTS:
+	RETRACT preGraspHandPose($hand, $item, $preGraspHandPoses);
+	RETRACT validArmPath($hand, $newInitialHandPose, $x);
+}
+
+PLAN PERFORM TakeSomething($robot, $hand, $item, $plane){
+PRECONDITION :
+	FACT type($robot, "'http://knowrob.org/kb/knowrob.owl#Leg'");
+	FACT type($hand, "'http://knowrob.org/kb/knowrob.owl#Hand'");
+	// FACT type($plane, "'http://knowrob.org/kb/knowrob.owl#ShelfInABuilding'");
+	FACT on_Physical($item, $plane);
+	FACT ProtocolManager($protocolManager);
+	
+BODY :
+	// $protocolManager.requestPlanTopic("TakeSomething");
+	System.out.println("\n----------> Start  TakeSomething");
+	System.out.println("Parameter : " + $robot + "\n" + $hand + "\n" + $item + "\n" + $plane);
+	
+	FACT Scanner($sc);
+	System.out.println("<<< 기본 동작의 실현 가능성 검증을 해야합니다(graspHandPose, validArmPath). >>>");
+	// $sc.next();
+
+	$protocolManager.requestPoseGeneration("graspHandPose", $hand, $item, "graspHandPoses", "");
+	FACT graspHandPose($hand, $item, $graspHandPoses);
+	FACT currentHandPose($hand, $currentHandPose1);
+	$result = $protocolManager.requestMotionPlanning("validArmPath", $hand, $currentHandPose1, $graspHandPoses, "");
+	FACT validArmPath($hand, $newCurrentHandPose1, $graspHandPose);
+	PERFORM GraspSomething($robot, $hand, $item, $plane, $newCurrentHandPose1, $graspHandPose);
+
+	FACT Scanner($sc);
+	System.out.println("<<< 기본 동작의 실현 가능성 검증을 해야합니다(closeHandPose, validArmPath). >>>");
+	// $sc.next();
+
+	$protocolManager.requestPoseGeneration("closeHandPose", $hand, $item, "closeHandPoses", "");
+	FACT closeHandPose($hand, $item, $closeHandPoses);
+	FACT currentHandPose($hand, $currentHandPose2);
+	$result = $protocolManager.requestMotionPlanning("validArmPath", $hand, $currentHandPose2, $closeHandPoses, "");
+	FACT validArmPath($hand, $newCurrentHandPose2, $closeHandPose);
+	PERFORM CloseAHand($robot, $hand, $item, $plane, $newCurrentHandPose2, $closeHandPose);
+
+	FACT Scanner($sc);
+	System.out.println("<<< 기본 동작의 실현 가능성 검증을 해야합니다(postGraspHandPose2, validArmPath). >>>");
+	// $sc.next();
+	
+	$protocolManager.requestPoseGeneration("postGraspHandPose", $hand, $item, "postGraspHandPoses2", "");
+	FACT postGraspHandPose($hand, $item, $postGraspHandPoses2);
+	FACT currentHandPose($hand, $currentHandPose4);
+	$result = $protocolManager.requestMotionPlanning("validArmPath", $hand, $currentHandPose4, $postGraspHandPoses2, "");
+	FACT validArmPath($hand, $newCurrentHandPose4, $postGraspHandPose2);
+	PERFORM RetractHandWithObject($robot, $hand, $item, $plane, $newCurrentHandPose4, $postGraspHandPose2);
+ 
+
+	System.out.println($item);
+	WHEN : IS_TRUE($item == "'http://www.arbi.com/ontologies/arbi.owl#water_bottle_1'")
+	{
+		FACT Scanner($sc);
+		System.out.println("<<< 기본 동작의 실현 가능성 검증을 해야합니다(postGraspHandPose3, validArmPath). >>>");
+		// $sc.next();
+	
+		$protocolManager.requestPoseGeneration("postGraspHandPose", $hand, $item, "postGraspHandPoses3", "");
+		FACT postGraspHandPose($hand, $item, $postGraspHandPoses3);
+		FACT currentHandPose($hand, $currentHandPose5);
+		$result = $protocolManager.requestMotionPlanning("validArmPath", $hand, $currentHandPose5, $postGraspHandPoses3, "");
+		FACT validArmPath($hand, $newCurrentHandPose5, $postGraspHandPose3);
+		PERFORM RetractHandWithObject($robot, $hand, $item, $plane, $newCurrentHandPose5, $postGraspHandPose3);
+	};
+
+	WHEN : IS_TRUE($item == "'http://www.arbi.com/ontologies/arbi.owl#water_bottle_2'")
+	{
+		FACT Scanner($sc);
+		System.out.println("<<< 기본 동작의 실현 가능성 검증을 해야합니다(postGraspHandPose3, validArmPath). >>>");
+		// $sc.next();
+	
+		$protocolManager.requestPoseGeneration("postGraspHandPose", $hand, $item, "postGraspHandPoses3", "");
+		FACT postGraspHandPose($hand, $item, $postGraspHandPoses3);
+		FACT currentHandPose($hand, $currentHandPose5);
+		$result = $protocolManager.requestMotionPlanning("validArmPath", $hand, $currentHandPose5, $postGraspHandPoses3, "");
+		FACT validArmPath($hand, $newCurrentHandPose5, $postGraspHandPose3);
+		PERFORM RetractHandWithObject($robot, $hand, $item, $plane, $newCurrentHandPose5, $postGraspHandPose3);
+	};
+
+	System.out.println("----------> Finished  TakeSomething\n");
+}
+
+PLAN PERFORM GraspSomething($robot, $hand, $item, $plane, $newPreGraspHandPose, $graspHandPose){
+PRECONDITION :
+	FACT type($robot, "'http://knowrob.org/kb/knowrob.owl#Leg'");
+	FACT type($hand, "'http://knowrob.org/kb/knowrob.owl#Hand'");
+	// FACT type($plane, "'http://knowrob.org/kb/knowrob.owl#ShelfInABuilding'");
+	FACT on_Physical($item, $plane);
+	FACT graspHandPose($hand, $item, $graspHandPoses);
+	FACT validArmPath($hand, $newPreGraspHandPose, $graspHandPose);
+	FACT ProtocolManager($protocolManager);
+	
+BODY :
+	// $protocolManager.requestPlanTopic("GraspSomething");
+	System.out.println("\n----------> Start  GraspSomething");
+	System.out.println("Parameter : " + $robot + "\n" + $hand + "\n" + $item + "\n" + $plane + "\n" + $newPreGraspHandPose + "\n" + $graspHandPose);
+
+	FACT Scanner($sc);
+	System.out.println("<<< 실현 가능성이 검증되었습니다. 이 기본 동작을 실행하시겠습니까? (y/n) >>>");
+	// $sc.next();
+
+	$result = $protocolManager.requestMoveArm($graspHandPose);
+
+	System.out.println("----------> Finished  GraspSomething\n");
+	
+EFFECTS:
+	//RETRACT graspHandPose($hand, $item, $objectLocation, $graspHandPoses);
+	RETRACT graspHandPose($hand, $item, $graspHandPoses);
+	RETRACT validArmPath($hand, $newPreGraspHandPose, $x);
+}
+
+PLAN PERFORM CloseAHand($robot, $hand, $item, $plane, $newGraspHandPose, $closeHandPose){
+PRECONDITION :
+	FACT type($robot, "'http://knowrob.org/kb/knowrob.owl#Leg'");
+	FACT type($hand, "'http://knowrob.org/kb/knowrob.owl#Hand'");
+	// FACT type($plane, "'http://knowrob.org/kb/knowrob.owl#ShelfInABuilding'");
+	FACT on_Physical($item, $plane);
+	FACT opened_hand($hand);
+	FACT closeHandPose($hand, $item, $closeHandPoses);
+	FACT validArmPath($hand, $newGraspHandPose, $closeHandPose);
+	FACT ProtocolManager($protocolManager);
+	
+BODY :
+	// $protocolManager.requestPlanTopic("CloseAHand");
+	System.out.println("\n----------> Start  CloseAHand");
+	System.out.println("Parameter : " + $robot + " " + $hand + " " + $item + " " + $plane + " " + $newGraspHandPose + " " + $closeHandPose);
+
+	FACT Scanner($sc);
+	System.out.println("<<< 실현 가능성이 검증되었습니다. 이 기본 동작을 실행하시겠습니까? (y/n) >>>");
+	// $sc.next();
+
+	$result = $protocolManager.requestMoveHand($closeHandPose);
+
+	System.out.println("----------> Finished  CloseAHand\n");
+	
+EFFECTS:
+	RETRACT closeHandPose($hand, $item, $closeHandPoses);
+	RETRACT validArmPath($hand, $newGraspHandPose, $x);
+}
+
+PLAN PERFORM RetractHandWithObject($robot, $hand, $item, $plane, $newGraspHandPose, $postGraspHandPose){
+PRECONDITION :
+	FACT type($robot, "'http://knowrob.org/kb/knowrob.owl#Leg'");
+	FACT type($hand, "'http://knowrob.org/kb/knowrob.owl#Hand'");
+	// FACT type($plane, "'http://knowrob.org/kb/knowrob.owl#ShelfInABuilding'");
+	FACT on_Physical($item, $plane);
+	FACT graspedBy($item, $hand);
+	FACT postGraspHandPose($hand, $item, $postGraspHandPoses);
+	FACT validArmPath($hand, $newGraspHandPose, $postGraspHandPose);
+	FACT ProtocolManager($protocolManager);
+	
+BODY :
+	// $protocolManager.requestPlanTopic("RetractHandWithObject");
+	System.out.println("\n----------> Start  RetractHandWithObject");
+	System.out.println("Parameter : " + $robot + " " + $hand + " " + $item + " " + $plane + " " + $newGraspHandPose + " " + $postGraspHandPose);
+
+	FACT Scanner($sc);
+	System.out.println("<<< 실현 가능성이 검증되었습니다. 이 기본 동작을 실행하시겠습니까? (y/n) >>>");
+	// $sc.next();
+
+	$result = $protocolManager.requestMoveArm($postGraspHandPose);
+
+	System.out.println("----------> Finished  RetractHandWithObject\n");
+	
+EFFECTS:
+	RETRACT postGraspHandPose($hand, $item, $postGraspHandPoses);
+	RETRACT validArmPath($hand, $newGraspHandPose, $x);
+}
+
+PLAN PERFORM MoveHandToPositionWithObject($robot, $hand, $item, $postGraspHandPose, $standardHandPose){
+PRECONDITION :
+	FACT type($robot, "Robot");
+	FACT type($hand, "Hand");
+	FACT graspedBy($item, $hand);
+	FACT validArmPath($hand, $postGraspHandPose, $standardHandPose);
+	FACT ProtocolManager($protocolManager);
+	
+BODY :
+	System.out.println("\n----------> Start  MoveHandToPositionWithObject");
+	System.out.println("Parameter : " + $robot + " " + $hand + " " + $item + " " + $postGraspHandPose + " " + $standardHandPose);
+
+	FACT Scanner($sc);
+	System.out.println("<<< 이 기본 동작을 실행하시겠습니까? (y/n) >>>");
+	// $sc.next();
+
+	$result = $protocolManager.requestMoveArm($standardHandPose);
+
+	System.out.println("----------> Finished  MoveHandToPositionWithObject\n");
+	
+EFFECTS:
+	RETRACT validArmPath($hand, $postGraspHandPose, $x);
+	RETRACT handAt($hand, $y);
+	ASSERT handAt($hand, $standardHandPose);
+}
+
+PLAN PERFORM MoveBaseForMiddlePoint($robot, $item, $newReachableBasePose, $middleBasePose){
+PRECONDITION :
+	FACT type($robot, "'http://knowrob.org/kb/knowrob.owl#Leg'");
+	FACT middleBasePose($robot, $plane, $middleBasePoses);
+	FACT validBasePath($robot, $newReachableBasePose, $middleBasePose);
+	FACT ProtocolManager($protocolManager);
+	
+BODY :
+	// $protocolManager.requestPlanTopic("MoveBaseForMiddlePoint");
+	System.out.println("\n----------> Start  MoveBaseForMiddlePoint");
+	System.out.println("Parameter : " + $robot + " " + $item + " " + $newReachableBasePose + " " + $middleBasePose);
+
+	FACT Scanner($sc);
+	System.out.println("<<< 실현 가능성이 검증되었습니다. 이 기본 동작을 실행하시겠습니까? (y/n) >>>");
+	// $sc.next();
+
+	$result = $protocolManager.requestMoveBase($middleBasePose);
+
+	System.out.println("----------> Finished  MoveBaseForMiddlePoint\n");
+	
+EFFECTS:
+	RETRACT middleBasePose($robot, $item, $middleBasePoses);
+	RETRACT validBasePath($robot, $reachableBasePose, $x);
+}
+
+PLAN PERFORM MoveBaseForPutDown($robot, $item, $newReachableBasePose, $placeableBasePose){
+PRECONDITION :
+	FACT type($robot, "'http://knowrob.org/kb/knowrob.owl#Leg'");
+	// FACT type($plane, "'http://knowrob.org/kb/knowrob.owl#ShelfInABuilding'");
+	FACT placeableBasePose($robot, $plane, $placeableBasePoses);
+	FACT validBasePath($robot, $newReachableBasePose, $placeableBasePose);
+	FACT ProtocolManager($protocolManager);
+	
+BODY :
+	// $protocolManager.requestPlanTopic("MoveBaseForPutDown");
+	System.out.println("\n----------> Start  MoveBaseForPutDown");
+	System.out.println("Parameter : " + $robot + " " + $item + " " + $newReachableBasePose + " " + $placeableBasePose);
+
+	FACT Scanner($sc);
+	System.out.println("<<< 실현 가능성이 검증되었습니다. 이 기본 동작을 실행하시겠습니까? (y/n) >>>");
+	// $sc.next();
+
+	$result = $protocolManager.requestMoveBase($placeableBasePose);
+
+	System.out.println("----------> Finished  MoveBaseForPutDown\n");
+	
+EFFECTS:
+	RETRACT placeableBasePose($robot, $item, $placeableBasePoses);
+	RETRACT validBasePath($robot, $reachableBasePose, $x);
+}
+
+PLAN PERFORM PutDownAnObjectOnPlane($robot, $hand, $item, $plane){
+PRECONDITION :
+	FACT type($robot, "'http://knowrob.org/kb/knowrob.owl#Leg'");
+	FACT type($hand, "'http://knowrob.org/kb/knowrob.owl#Hand'");
+	// FACT type($plane, "'http://knowrob.org/kb/knowrob.owl#ShelfInABuilding'");
+	FACT ProtocolManager($protocolManager);
+	
+BODY :
+	// $protocolManager.requestPlanTopic("PutDownAnObjectOnPlane");
+	System.out.println("\n----------> Start  PutDownAnObjectOnPlane");
+	System.out.println("Parameter : " + $robot + " " + $hand + " " + $item + " " + $plane);
+	
+	//FACT Scanner($sc);
+	//System.out.println("<<< 기본 동작의 실현 가능성 검증을 해야합니다(placeableObjectLocation, graspHandPose, validArmPath). >>>");
+	////// // $sc.next();
+	
+	//$placeableObjectLocation = $protocolManager.requestPoseGeneration("placeableObjectLocation", $item, $plane, "placeableObjectLocation", "");
+	//$protocolManager.requestPoseGeneration("placeableObjectLocation", $item, $plane, "placeableObjectLocation", "");
+	//FACT placeableObjectLocation($item, $plane, $placeableObjectLocation);
+	//$graspHandPose = $protocolManager.requestPoseGeneration("graspHandPose", $hand, $item, $placeableObjectLocation, "graspHandPose");
+	//$protocolManager.requestPoseGeneration("graspHandPose", $hand, $item, $placeableObjectLocation, "graspHandPoses");
+	//FACT graspHandPose($hand, $item, $placeableObjectLocation, $graspHandPoses);
+	
+
+	System.out.println($item);
+	WHEN : IS_TRUE($item == "'http://www.arbi.com/ontologies/arbi.owl#tomato_soup_can_1'")
+	{
+		FACT Scanner($sc);
+		System.out.println("<<< 기본 동작의 실현 가능성 검증을 해야합니다(preRealeaseHandPose1, validArmPath). >>>");
+		// $sc.next();
+	
+		$protocolManager.requestPoseGeneration("graspHandPose", $hand, $item, "preRealeaseHandPoses1", "");
+		FACT graspHandPose($hand, $item, $preRealeaseHandPoses1);
+		FACT currentHandPose($hand, $currentHandPose1);
+		$result = $protocolManager.requestMotionPlanning("validArmPath", $hand, $currentHandPose1, $preRealeaseHandPoses1, "");
+		FACT validArmPath($hand, $newCurrentHandPose1, $preRealeaseHandPose1);
+		PERFORM LowerAnObjectOnPlane($robot, $hand, $item, $plane, $newCurrentHandPose1, $preRealeaseHandPose1);
+	
+		FACT Scanner($sc);
+		System.out.println("<<< 기본 동작의 실현 가능성 검증을 해야합니다(preRealeaseHandPose2, validArmPath). >>>");
+		// $sc.next();
+	
+		$protocolManager.requestPoseGeneration("graspHandPose", $hand, $item, "preRealeaseHandPoses2", "");
+		FACT graspHandPose($hand, $item, $preRealeaseHandPoses2);
+		FACT currentHandPose($hand, $currentHandPose2);
+		$result = $protocolManager.requestMotionPlanning("validArmPath", $hand, $currentHandPose2, $preRealeaseHandPoses2, "");
+		FACT validArmPath($hand, $newCurrentHandPose2, $preRealeaseHandPose2);
+		PERFORM LowerAnObjectOnPlane($robot, $hand, $item, $plane, $newCurrentHandPose2, $preRealeaseHandPose2);
+	};
+
+	PERFORM ReleaseGraspOfObject($robot, $hand, $item, $plane);
+	
+	System.out.println("----------> Finished  PutDownAnObjectOnPlane\n");
+	
+}
+
+PLAN PERFORM ClearAnObstacleOnPlane($robot, $hand, $obstacle, $item, $plane){
+PRECONDITION :
+	FACT type($robot, "'http://knowrob.org/kb/knowrob.owl#Leg'");
+	FACT type($hand, "'http://knowrob.org/kb/knowrob.owl#Hand'");
+	FACT on_Physical($obstacle, $plane);
+	FACT ProtocolManager($protocolManager);
+	
+BODY :
+	// $protocolManager.requestPlanTopic("ClearAnObstacleOnPlane");
+	System.out.println("\n----------> Start  ClearAnObstacleOnPlane");
+	System.out.println("Parameter : " + $robot + " " + $hand + " " + $obstacle + " " + $item + " " + $plane);
+	
+	FACT Scanner($sc);
+	System.out.println("<<< 기본 동작의 실현 가능성 검증을 해야합니다(preGraspHandPose, validArmPath). >>>");
+	// $sc.next();
+	
+	$protocolManager.requestPoseGeneration("preGraspHandPose", $hand, $obstacle, "preGraspHandPoses", "");
+	FACT preGraspHandPose($hand, $obstacle, $preGraspHandPoses);
+	FACT currentHandPose($hand, $currentHandPose1);
+	$result = $protocolManager.requestMotionPlanning("validArmPath", $hand, $currentHandPose1, $preGraspHandPoses, "");
+	FACT validArmPath($hand, $newCurrentHandPose1, $preGraspHandPose);
+	PERFORM ReachForSomethingWithHand($robot, $hand, $obstacle, $plane, $newCurrentHandPose1, $preGraspHandPose);
+	
+	FACT Scanner($sc);
+	System.out.println("<<< 기본 동작의 실현 가능성 검증을 해야합니다(graspHandPose, validArmPath). >>>");
+	// $sc.next();
+
+	$protocolManager.requestPoseGeneration("graspHandPose", $hand, $obstacle, "graspHandPoses", "");
+	FACT graspHandPose($hand, $obstacle, $graspHandPoses);
+	FACT currentHandPose($hand, $currentHandPose2);
+	$result = $protocolManager.requestMotionPlanning("validArmPath", $hand, $currentHandPose2, $graspHandPoses, "");
+	FACT validArmPath($hand, $newCurrentHandPose2, $graspHandPose);
+	PERFORM GraspSomething($robot, $hand, $obstacle, $plane, $newCurrentHandPose2, $graspHandPose);
+
+	FACT Scanner($sc);
+	System.out.println("<<< 기본 동작의 실현 가능성 검증을 해야합니다(closeHandPose, validArmPath). >>>");
+	// $sc.next();
+
+	$protocolManager.requestPoseGeneration("closeHandPose", $hand, $obstacle, "closeHandPoses", "");
+	FACT closeHandPose($hand, $obstacle, $closeHandPoses);
+	FACT currentHandPose($hand, $currentHandPose3);
+	$result = $protocolManager.requestMotionPlanning("validArmPath", $hand, $currentHandPose3, $closeHandPoses, "");
+	FACT validArmPath($hand, $newCurrentHandPose3, $closeHandPose);
+	PERFORM CloseAHand($robot, $hand, $obstacle, $plane, $newCurrentHandPose3, $closeHandPose);
+
+	FACT Scanner($sc);
+	System.out.println("<<< 기본 동작의 실현 가능성 검증을 해야합니다(RealeaseHandPose, validArmPath). >>>");
+	// $sc.next();
+	
+	$protocolManager.requestPoseGeneration("graspHandPose", $hand, $obstacle, "realeaseHandPoses", "");
+	FACT graspHandPose($hand, $obstacle, $realeaseHandPoses);
+	FACT currentHandPose($hand, $currentHandPose4);
+	$result = $protocolManager.requestMotionPlanning("validArmPath", $hand, $currentHandPose4, $realeaseHandPoses, "");
+	FACT validArmPath($hand, $newCurrentHandPose4, $realeaseHandPose);
+	PERFORM LowerAnObjectOnPlane($robot, $hand, $obstacle, $plane, $newCurrentHandPose4, $realeaseHandPose);
+	
+	FACT Scanner($sc);
+	System.out.println("<<< 기본 동작의 실현 가능성 검증을 해야합니다(openAHand). >>>");
+	// $sc.next();
+
+	$protocolManager.requestPoseGeneration("openHandPose", $hand, $obstacle, "openHandPoses", "");
+	FACT openHandPose($hand, $obstacle, $openHandPoses);
+	FACT currentHandPose($hand, $currentHandPose5);
+	$result = $protocolManager.requestMotionPlanning("validArmPath", $hand, $currentHandPose5, $openHandPoses, "");
+	FACT validArmPath($hand, $newCurrentHandPose5, $openHandPose);
+	PERFORM OpenAHand($robot, $hand, $obstacle, $plane, $newCurrentHandPose5, $openHandPose);
+	
+	FACT Scanner($sc);
+	System.out.println("<<< 기본 동작의 실현 가능성 검증을 해야합니다(postRealeaseHandPose, validArmPath). >>>");
+	// $sc.next();
+	
+	$protocolManager.requestPoseGeneration("postRealeaseHandPose", $hand, $obstacle, "postRealeaseHandPoses", "");
+	FACT postRealeaseHandPose($hand, $obstacle, $postRealeaseHandPoses);
+	FACT currentHandPose($hand, $currentHandPose6);
+	$result = $protocolManager.requestMotionPlanning("validArmPath", $hand, $currentHandPose6, $postRealeaseHandPoses, "");
+	FACT validArmPath($hand, $newCurrentHandPose6, $postRealeaseHandPose);
+	PERFORM RetractHandFromObject($robot, $hand, $obstacle, $plane, $newCurrentHandPose6, $postRealeaseHandPose);
+
+	System.out.println("----------> Finished  ClearAnObstacleOnPlane\n");
+}
+
+PLAN PERFORM LowerAnObjectOnPlane($robot, $hand, $item, $plane, $newStandardHandPose, $placeableHandPose){
+PRECONDITION :
+	FACT type($robot, "'http://knowrob.org/kb/knowrob.owl#Leg'");
+	FACT type($hand, "'http://knowrob.org/kb/knowrob.owl#Hand'");
+	// FACT type($plane, "'http://knowrob.org/kb/knowrob.owl#ShelfInABuilding'");
+	FACT graspedBy($item, $hand);
+	// FACT placeableObjectLocation($item, $plane, $placeableObjectLocation);
+	FACT graspHandPose($hand, $item, $placeableHandPoses);
+	FACT validArmPath($hand, $newStandardHandPose, $placeableHandPose);
+	FACT ProtocolManager($protocolManager);
+	
+BODY :
+	// $protocolManager.requestPlanTopic("LowerAnObjectOnPlane");
+	System.out.println("\n----------> Start  LowerAnObjectOnPlane");
+	System.out.println("Parameter : " + $robot + " " + $hand + " " + $item + " " + $plane + " " + $newStandardHandPose + " " + $placeableHandPose);
+
+	FACT Scanner($sc);
+	System.out.println("<<< 실현 가능성이 검증되었습니다. 이 기본 동작을 실행하시겠습니까? (y/n) >>>");
+	// $sc.next();
+
+	$result = $protocolManager.requestMoveArm($placeableHandPose);
+
+	System.out.println("----------> Finished  LowerAnObjectOnPlane\n");
+	
+EFFECTS:
+	//RETRACT placeableObjectLocation($item, $plane, $placeableObjectLocation);
+	RETRACT graspHandPose($hand, $item, $placeableHandPoses);
+	RETRACT validArmPath($hand, $newStandardHandPose, $x);
+}
+
+PLAN PERFORM LowerAnObstacleOnPlane($robot, $hand, $obstacle, $plane, $standardHandPose, $clearanceableHandPose){
+PRECONDITION :
+	FACT type($robot, "Robot");
+	FACT type($hand, "Hand");
+	FACT type($plane, "Plane");
+	FACT graspedBy($obstacle, $hand);
+	FACT clearanceableObjectLocation($obstacle, $plane, $clearanceableObjectLocation);
+	FACT graspHandPose($hand, $obstacle, $clearanceableObjectLocation, $clearanceableHandPose);
+	FACT validArmPath($hand, $standardHandPose, $clearanceableHandPose);
+	FACT ProtocolManager($protocolManager);
+	
+BODY :
+	System.out.println("\n----------> Start  LowerAnObstacleOnPlane");
+	System.out.println("Parameter : " + $robot + " " + $hand + " " + $obstacle + " " + $plane + " " + $standardHandPose + " " + $clearanceableHandPose);
+
+	FACT Scanner($sc);
+	System.out.println("<<< 실현 가능성이 검증되었습니다. 이 기본 동작을 실행하시겠습니까? (y/n) >>>");
+	// $sc.next();
+
+	$result = $protocolManager.requestMoveArm($clearanceableHandPose);
+
+	System.out.println("----------> Finished  LowerAnObstacleOnPlane\n");
+	
+EFFECTS:
+	RETRACT clearanceableObjectLocation($obstacle, $plane, $clearanceableObjectLocation);
+	RETRACT graspHandPose($hand, $obstacle, $clearanceableObjectLocation, $clearanceableHandPose);
+	RETRACT validArmPath($hand, $standardHandPose, $x);
+}
+
+PLAN PERFORM ReleaseGraspOfObject($robot, $hand, $item, $plane){
+PRECONDITION :
+	FACT type($robot, "'http://knowrob.org/kb/knowrob.owl#Leg'");
+	FACT type($hand, "'http://knowrob.org/kb/knowrob.owl#Hand'");
+	// FACT type($plane, "'http://knowrob.org/kb/knowrob.owl#ShelfInABuilding'");
+	FACT graspedBy($item, $hand);
+	FACT ProtocolManager($protocolManager);
+	
+BODY :
+	// $protocolManager.requestPlanTopic("ReleaseGraspOfObject");
+	System.out.println("\n----------> Start  ReleaseGraspOfObject");
+	System.out.println("Parameter : " + $robot + " " + $hand + " " + $item + " " + $plane);
+
+	FACT Scanner($sc);
+	System.out.println("<<< 기본 동작의 실현 가능성 검증을 해야합니다(RealeaseHandPose, validArmPath). >>>");
+	// $sc.next();
+	
+	$protocolManager.requestPoseGeneration("graspHandPose", $hand, $item, "realeaseHandPoses", "");
+	FACT graspHandPose($hand, $item, $realeaseHandPoses);
+	FACT currentHandPose($hand, $currentHandPose);
+	$result = $protocolManager.requestMotionPlanning("validArmPath", $hand, $currentHandPose, $realeaseHandPoses, "");
+	FACT validArmPath($hand, $newCurrentHandPose, $realeaseHandPose);
+	PERFORM LowerAnObjectOnPlane($robot, $hand, $item, $plane, $newCurrentHandPose, $realeaseHandPose);
+	
+	FACT Scanner($sc);
+	System.out.println("<<< 기본 동작의 실현 가능성 검증을 해야합니다(openAHand). >>>");
+	// $sc.next();
+
+	$protocolManager.requestPoseGeneration("openHandPose", $hand, $item, "openHandPoses", "");
+	FACT openHandPose($hand, $item, $openHandPoses);
+	FACT currentHandPose($hand, $currentHandPose2);
+	$result = $protocolManager.requestMotionPlanning("validArmPath", $hand, $currentHandPose2, $openHandPoses, "");
+	FACT validArmPath($hand, $newCurrentHandPose2, $openHandPose);
+	PERFORM OpenAHand($robot, $hand, $item, $plane, $newCurrentHandPose2, $openHandPose);
+	
+	FACT Scanner($sc);
+	System.out.println("<<< 기본 동작의 실현 가능성 검증을 해야합니다(postRealeaseHandPose, validArmPath). >>>");
+	// $sc.next();
+	
+	//$preGraspHandPose = $protocolManager.requestPoseGeneration("preGraspHandPose", $hand, $item, $placeableObjectLocation, "preGraspHandPose");
+	//$protocolManager.requestPoseGeneration("preGraspHandPose", $hand, $item, $placeableObjectLocation, "preGraspHandPose");
+	//FACT preGraspHandPose($hand, $item, $placeableObjectLocation, $preGraspHandPoses);
+	$protocolManager.requestPoseGeneration("postRealeaseHandPose", $hand, $item, "postRealeaseHandPoses", "");
+	FACT postRealeaseHandPose($hand, $item, $postRealeaseHandPoses);
+	FACT currentHandPose($hand, $currentHandPose3);
+	$result = $protocolManager.requestMotionPlanning("validArmPath", $hand, $currentHandPose3, $postRealeaseHandPoses, "");
+	FACT validArmPath($hand, $newCurrentHandPose3, $postRealeaseHandPose);
+	PERFORM RetractHandFromObject($robot, $hand, $item, $plane, $newCurrentHandPose3, $postRealeaseHandPose);
+	
+	//$result = $protocolManager.requestMotionPlanning("validArmPath", $hand, $preGraspHandPose, $standardHandPoses, "");
+	//FACT validArmPath($hand, $preGraspHandPose, $standardHandPose);
+	//PERFORM MoveEmptyHandToPosition($robot, $hand, $preGraspHandPose, $standardHandPose);
+	
+	System.out.println("----------> Finished  ReleaseGraspOfObject\n");
+}
+
+PLAN PERFORM OpenAHand($robot, $hand, $item, $plane, $newPlaceableHandPose, $openHandPose){
+PRECONDITION :
+	FACT type($robot, "'http://knowrob.org/kb/knowrob.owl#Leg'");
+	FACT type($hand, "'http://knowrob.org/kb/knowrob.owl#Hand'");
+	// FACT type($plane, "'http://knowrob.org/kb/knowrob.owl#ShelfInABuilding'");
+	FACT openHandPose($hand, $item, $openHandPoses);
+	FACT validArmPath($hand, $newPlaceableHandPose, $openHandPose);
+	FACT ProtocolManager($protocolManager);
+	
+BODY :
+	// $protocolManager.requestPlanTopic("OpenAHand");
+	System.out.println("\n----------> Start  OpenAHand");
+	System.out.println("Parameter : " + $robot + " " + $hand + " " + $item + " " + $plane + " " + $newPlaceableHandPose + " " + $openHandPose);
+
+	FACT Scanner($sc);
+	System.out.println("<<< 이 기본 동작을 실행하시겠습니까? (y/n) >>>");
+	// $sc.next();
+
+	$result = $protocolManager.requestMoveHand($openHandPose);
+
+	System.out.println("----------> Finished  OpenAHand\n");
+	
+EFFECTS:
+	RETRACT	openHandPose($hand, $item, $openHandPoses);
+	RETRACT validArmPath($hand, $newPlaceableHandPose, $x);
+}
+
+PLAN PERFORM RetractHandFromObject($robot, $hand, $item, $plane, $newRealeaseHandPose, $postRealeaseHandPose){
+PRECONDITION :
+	FACT type($robot, "'http://knowrob.org/kb/knowrob.owl#Leg'");
+	FACT type($hand, "'http://knowrob.org/kb/knowrob.owl#Hand'");
+	// FACT type($plane, "'http://knowrob.org/kb/knowrob.owl#ShelfInABuilding'");
+	FACT opened_hand($hand);
+	FACT postRealeaseHandPose($hand, $item, $postRealeaseHandPoses);
+	FACT validArmPath($hand, $newRealeaseHandPose, $postRealeaseHandPose);
+	FACT ProtocolManager($protocolManager);
+	
+BODY :
+	// $protocolManager.requestPlanTopic("RetractHandFromObject");
+	System.out.println("\n----------> Start  RetractHandFromObject");
+	System.out.println("Parameter : " + $robot + " " + $hand + " " + $item + " " + $plane + " " + $newRealeaseHandPose + " " + $postRealeaseHandPose);
+
+	FACT Scanner($sc);
+	System.out.println("<<< 실현 가능성이 검증되었습니다. 이 기본 동작을 실행하시겠습니까? (y/n) >>>");
+	// $sc.next();
+
+	$result = $protocolManager.requestMoveArm($postRealeaseHandPose);
+
+	System.out.println("----------> Finished  RetractHandFromObject\n");
+	
+EFFECTS:
+	RETRACT postRealeaseHandPose($hand, $item, $postRealeaseHandPoses);
+	RETRACT validArmPath($hand, $newRealeaseHandPose, $x);
+}
+
+PLAN PERFORM MoveEmptyHandToPosition($robot, $hand, $preGraspHandPose, $standardHandPose){
+PRECONDITION :
+	FACT type($robot, "Robot");
+	FACT type($hand, "Hand");
+	FACT empty-hand($hand);
+	FACT handAt($hand, $preGraspHandPose);
+	//FACT standardHandPose($hand, $standardHandPose);
+	FACT validArmPath($hand, $preGraspHandPose, $standardHandPose);
+	FACT ProtocolManager($protocolManager);
+	
+BODY :
+	System.out.println("\n----------> Start  MoveEmptyHandToPosition");
+	System.out.println("Parameter : " + $robot + " " + $hand + " " + $preGraspHandPose + " " + $standardHandPose);
+
+	FACT Scanner($sc);
+	System.out.println("<<< 이 기본 동작을 실행하시겠습니까? (y/n) >>>");
+	// $sc.next();
+
+	$result = $protocolManager.requestMoveArm($standardHandPose);
+
+	System.out.println("----------> Finished  MoveEmptyHandToPosition\n");
+	
+EFFECTS:
+	RETRACT validArmPath($hand, $preGraspHandPose, $x);
+	RETRACT handAt($hand, $y);
+	ASSERT handAt($hand, $standardHandPose);
+}
+
+PLAN PERFORM Delay($msec){
+PRECONDITION:
+    FACT ProtocolManager($protocolManager);
+BODY :
+    System.out.println("\n----------> Start  Delay");
+    $protocolManager.requestDelay($msec);
+    System.out.println("\n----------> End  Delay");
+}
+

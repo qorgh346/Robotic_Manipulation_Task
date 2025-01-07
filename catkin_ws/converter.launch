@@ -1,0 +1,5 @@
+<launch>
+<node name="object_throttler" type="throttle" pkg="topic_tools" args="messages /vrep_ros_interface/object_info_test 1.0 /object_info" />
+<node name="robot_throttler" type="throttle" pkg="topic_tools" args="messages /vrep_ros_interface/visual_robot_perception 1.0 /visual_robot_perception" />
+<node name="joint_throttler" type="throttle" pkg="topic_tools" args="messages /j2n6s300/joint_states_cm 1.0 /j2n6s300/joint_states_cm" />
+</launch>

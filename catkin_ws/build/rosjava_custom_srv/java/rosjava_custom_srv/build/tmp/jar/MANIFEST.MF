@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Export-Package: rosjava_custom_srv;version="0.1.0";uses:="geometry_msg
+ s,moveit_msgs,org.ros.internal.message,sensor_msgs"
+Bundle-SymbolicName: org.ros.rosjava_messages.rosjava_custom_srv
+Bundle-Version: 0.1.0
+Bundle-Name: rosjava_custom_srv
+Bundle-ManifestVersion: 2
+Bnd-LastModified: 1627551402000
+Import-Package: geometry_msgs;version="[1.12,2)",moveit_msgs;version="
+ [0.9,1)",org.ros.internal.message,sensor_msgs;version="[1.12,2)"
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.7))"
+Created-By: 1.8.0_292 (Private Build)
+Tool: Bnd-3.4.0.201707252008
+

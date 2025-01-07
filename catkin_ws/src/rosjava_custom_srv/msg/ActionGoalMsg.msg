@@ -1,0 +1,10 @@
+int32 targetBody
+int32 actionType
+string object
+moveit_msgs/JointConstraint[] joint_constraints
+moveit_msgs/PositionConstraint[] position_constraints
+moveit_msgs/OrientationConstraint[] orientation_constraints
+moveit_msgs/VisibilityConstraint[] visibility_constraints
+geometry_msgs/PoseStamped targetPose
+sensor_msgs/JointState targetJointState
+

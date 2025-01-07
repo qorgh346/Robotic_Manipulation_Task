@@ -1,0 +1,148 @@
+import org.ros.test.*;
+
+GOALS:
+	PERFORM Test;
+
+Plan PERFORM Test {
+	BODY:
+		System.out.println("Hello World!");
+		$utility = 10.5;
+		POST PERFORM Test2 :UTILITY $utility;
+}
+
+Plan PERFORM Test2 {
+	BODY:
+		System.out.println("�ȳ��ϼ���!");
+}
+
+
+Plan PERFORM GogoException {
+	BODY:
+		System.out.println("GogoException IN");
+		throw new agent.model.Exception("HELLO");
+		System.out.println("GogoException OUT");
+}
+
+
+Plan CONCLUDE TestFact1($x, $y) {
+	BODY:
+		System.out.println("HELLO!");
+}
+
+Plan PERFORM TestGoal1($x, $y) {
+	BODY: 
+		System.out.println("////////////////////////////////////////////");
+		System.out.println("TestGoal1:: " + $x + ", " + $y);
+
+		// ASSIGN  
+		
+		$sum = ($x + $y);
+		
+		// ClassOperation
+		
+		EXECUTE `print("�� = " + $sum + "\n");
+		System.out.println("�� = " + $sum);
+
+		// IF-THEN-ELSE
+
+		if ($sum >= 500) {
+			System.out.println("���� 500 �̻��Դϴ�.");
+		} else if ($sum >= 350) {
+			System.out.println("���� 350 �̻��Դϴ�.");
+		} else {
+			System.out.println("���� 350 �̸��Դϴ�.");
+		}
+}
+
+Plan PERFORM TestGoal2($value, $msg) {
+	BODY:
+		System.out.println("////////////////////////////////////////////");
+		System.out.println("TestGoal2:: " + $value + ", " + $msg);
+		
+		// Object Allocation
+		
+		$obj = new Test(100);
+		
+		// Object Operation
+		
+		$obj.print();
+		$obj.print("�ݰ����ϴ�");
+		$obj.print($msg);
+		
+		// Return Value
+		
+		$return = $obj.getSum(150, 350);
+		System.out.println("getSum():: " + $return);
+		System.out.println("getSum()+100:: " + $return + 100);
+		
+		// Get Field
+		
+		$return = $obj.getValue();
+		System.out.println("ReturnValue = " + $return);
+		
+		$obj.setValue(200);
+		$return = $obj.getValue();
+		System.out.println("ReturnValue = " + $return);
+
+		// Static Operation
+		
+		$obj.staticPrint();		
+		
+		// Boolean
+		
+		if ($obj.getTrue()) {
+			System.out.println("TRUE!!!");
+		}
+		
+		if (!$obj.getFalse()) {
+			System.out.println("TRUE!!!");
+		} else {
+			System.out.println("FALSE!!!");
+		}
+		
+}
+
+Plan PERFORM TestGoal3 {
+	BODY:
+		System.out.println("////////////////////////////////////////////");
+	
+		$address1 	= new Address("120-136", "���� ���");
+		$person1 	= new Person("�浿", "ȫ", 27, $address1);
+		$person2 	= new Person("ȫ��", "��", 40, new Address("130-127", "���� �� ���"));
+
+		System.out.println($person1 + "(" + $person1.getAge() + ")");
+		System.out.println("\t AddressDetail: " + $person1.getAddress().getDetail());
+		System.out.println("\t ZipCode: " + $person1.getAddress().getZipCode());
+
+		System.out.println($person2 + "(" + $person2.getAge() + ")");
+		System.out.println("\t Address: " + $person2.getAddress());
+		
+		//
+		
+		if ($person1.getAge() < $person2.getAge()) {
+			System.out.println($person1 + " (��)�� " + $person2 + " ���� ��ϴ�.");
+		} else if ($person1.getAge() == $person2.getAge()) {
+			System.out.println("���� ���̰� �����ϴ�.");
+		} else {
+			System.out.println($person1 + " (��)�� " + $person2 + " ���� ���̰� �����ϴ�.");
+		}
+		
+}
+
+Plan PERFORM TestGoal4($count) {
+	BODY:
+		System.out.println("////////////////////////////////////////////");
+	
+		/*
+		$i = 0;
+		while : is_true $i < $count {	
+			System.out.println("FOR_LOOP[" + $i + "]");
+			$i = $i + 1;
+		};
+		*/
+	
+		for ($i = 5; $i < $count; $i = $i + 1) {
+			System.out.println("FOR_LOOP[" + $i + "]");
+		}
+	
+}

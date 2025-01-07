@@ -1,0 +1,2 @@
+set(rosjava_custom_srv_MESSAGE_FILES "msg/ActionGoalMsg.msg;msg/ActionResultMsg.msg;msg/ActionState.msg;msg/ArmAction.msg;msg/MainServiceRequest.msg;msg/Monitor.msg;msg/MonitorServiceRequest.msg;msg/MonitorServiceResponse.msg;msg/QueryServiceRequest.msg;msg/QueryServiceResponse.msg")
+set(rosjava_custom_srv_SERVICE_FILES "srv/JamService.srv;srv/PathService.srv;srv/PoseService.srv;srv/PosesService.srv;srv/PredicateService.srv")

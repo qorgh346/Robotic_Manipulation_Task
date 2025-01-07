@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    <uri id="Imports Wizard Entry" name="http://knowrob.org/kb/knowrob.owl" uri="file:/home/jonghun/cmProlog/knowrob_library/knowrob.owl"/>
+    <uri id="User Entered Import Resolution" name="package://knowrob_common/owl/knowrob.owl" uri="file:/home/jonghun/cmProlog/knowrob_library/knowrob.owl"/>
+    <group id="Folder Repository, directory=, recursive=true, Auto-Update=true, version=2" prefer="public" xml:base="">
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://knowrob.org/kb/comp_spatial.owl" uri="arbi_comp_robotState.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://knowrob.org/kb/comp_spatial.owl" uri="arbi_comp_temporal.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://knowrob.org/kb/comp_spatial.owl" uri="arbi_comp_spatial.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://knowrob.org/kb/ias_semantic_map.owl#" uri="fsdmap.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://knowrob.org/kb/ias_semantic_map.owl#" uri="social_demo190103.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://knowrob.org/kb/ias_semantic_map.owl#" uri="semanticmap_demo%20-%20º¹»çº».owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://knowrob.org/kb/ias_semantic_map.owl#" uri="screen_semanticmap_demo_3.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://knowrob.org/kb/ias_semantic_map.owl#" uri="jaco_model.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://knowrob.org/kb/ias_semantic_map.owl#" uri="fsdsemanticmap5.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://knowrob.org/kb/ias_semantic_map.owl#" uri="fsdsemanticmap2.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://knowrob.org/kb/ias_semantic_map.owl#" uri="object.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://knowrob.org/kb/ias_semantic_map.owl#" uri="screen_semanticmap_demo_2.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://knowrob.org/kb/ias_semantic_map.owl#" uri="object_demo_tables.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://knowrob.org/kb/ias_semantic_map.owl#" uri="screen_semanticmap_demo_4.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://knowrob.org/kb/ias_semantic_map.owl#" uri="semanticmap_demo_gazebo.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://knowrob.org/kb/ias_semantic_map.owl#" uri="object_demo_gazebo.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://knowrob.org/kb/ias_semantic_map.owl#" uri="semanticmap2.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://knowrob.org/kb/ias_semantic_map.owl#" uri="semanticmap_demo.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://knowrob.org/kb/ias_semantic_map.owl#" uri="object_demo.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://knowrob.org/kb/ias_semantic_map.owl#" uri="semanticmap.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://knowrob.org/kb/ias_semantic_map.owl#" uri="fsdsemanticmap3.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://knowrob.org/kb/ias_semantic_map.owl#" uri="fsdsemanticmap.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://knowrob.org/kb/ias_semantic_map.owl#" uri="fsdsemanticmap4.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://knowrob.org/kb/ias_semantic_map.owl#" uri="screen_semanticmap_demo_1.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://knowrob.org/kb/ias_semantic_map.owl#" uri="simple_scenario.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://knowrob.org/kb/ias_semantic_map.owl#" uri="screen_semanticmap_demo.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://knowrob.org/kb/ias_semantic_map.owl#" uri="semanticmap3.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://knowrob.org/kb/ias_semantic_map.owl#" uri="semanticmap4.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://knowrob.org/kb/ias_semantic_map.owl#" uri="screen_semanticmap_demo_1_on_physical.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="http://knowrob.org/kb/knowrob.owl" uri="arbi.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://www.arbi.com/ontologies/arbi_map.owl" uri="arbi_map3.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://www.arbi.com/ontologies/arbi_map.owl" uri="arbi_map2.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://www.arbi.com/ontologies/arbi_map.owl" uri="arbi_map.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1563782320588" name="duplicate:http://www.arbi.com/ontologies/arbi_map.owl" uri="arbi_map4.owl"/>
+    </group>
+</catalog>

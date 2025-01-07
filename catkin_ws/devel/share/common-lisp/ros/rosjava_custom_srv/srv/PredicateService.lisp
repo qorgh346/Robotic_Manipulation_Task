@@ -1,0 +1,325 @@
+; Auto-generated. Do not edit!
+
+
+(cl:in-package rosjava_custom_srv-srv)
+
+
+;//! \htmlinclude PredicateService-request.msg.html
+
+(cl:defclass <PredicateService-request> (roslisp-msg-protocol:ros-message)
+  ((predicate
+    :reader predicate
+    :initarg :predicate
+    :type (cl:vector cl:string)
+   :initform (cl:make-array 0 :element-type 'cl:string :initial-element ""))
+   (param1
+    :reader param1
+    :initarg :param1
+    :type (cl:vector cl:string)
+   :initform (cl:make-array 0 :element-type 'cl:string :initial-element ""))
+   (param2
+    :reader param2
+    :initarg :param2
+    :type (cl:vector cl:string)
+   :initform (cl:make-array 0 :element-type 'cl:string :initial-element ""))
+   (param3
+    :reader param3
+    :initarg :param3
+    :type (cl:vector cl:string)
+   :initform (cl:make-array 0 :element-type 'cl:string :initial-element ""))
+   (param4
+    :reader param4
+    :initarg :param4
+    :type (cl:vector cl:string)
+   :initform (cl:make-array 0 :element-type 'cl:string :initial-element "")))
+)
+
+(cl:defclass PredicateService-request (<PredicateService-request>)
+  ())
+
+(cl:defmethod cl:initialize-instance :after ((m <PredicateService-request>) cl:&rest args)
+  (cl:declare (cl:ignorable args))
+  (cl:unless (cl:typep m 'PredicateService-request)
+    (roslisp-msg-protocol:msg-deprecation-warning "using old message class name rosjava_custom_srv-srv:<PredicateService-request> is deprecated: use rosjava_custom_srv-srv:PredicateService-request instead.")))
+
+(cl:ensure-generic-function 'predicate-val :lambda-list '(m))
+(cl:defmethod predicate-val ((m <PredicateService-request>))
+  (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader rosjava_custom_srv-srv:predicate-val is deprecated.  Use rosjava_custom_srv-srv:predicate instead.")
+  (predicate m))
+
+(cl:ensure-generic-function 'param1-val :lambda-list '(m))
+(cl:defmethod param1-val ((m <PredicateService-request>))
+  (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader rosjava_custom_srv-srv:param1-val is deprecated.  Use rosjava_custom_srv-srv:param1 instead.")
+  (param1 m))
+
+(cl:ensure-generic-function 'param2-val :lambda-list '(m))
+(cl:defmethod param2-val ((m <PredicateService-request>))
+  (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader rosjava_custom_srv-srv:param2-val is deprecated.  Use rosjava_custom_srv-srv:param2 instead.")
+  (param2 m))
+
+(cl:ensure-generic-function 'param3-val :lambda-list '(m))
+(cl:defmethod param3-val ((m <PredicateService-request>))
+  (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader rosjava_custom_srv-srv:param3-val is deprecated.  Use rosjava_custom_srv-srv:param3 instead.")
+  (param3 m))
+
+(cl:ensure-generic-function 'param4-val :lambda-list '(m))
+(cl:defmethod param4-val ((m <PredicateService-request>))
+  (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader rosjava_custom_srv-srv:param4-val is deprecated.  Use rosjava_custom_srv-srv:param4 instead.")
+  (param4 m))
+(cl:defmethod roslisp-msg-protocol:serialize ((msg <PredicateService-request>) ostream)
+  "Serializes a message object of type '<PredicateService-request>"
+  (cl:let ((__ros_arr_len (cl:length (cl:slot-value msg 'predicate))))
+    (cl:write-byte (cl:ldb (cl:byte 8 0) __ros_arr_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 8) __ros_arr_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 16) __ros_arr_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 24) __ros_arr_len) ostream))
+  (cl:map cl:nil #'(cl:lambda (ele) (cl:let ((__ros_str_len (cl:length ele)))
+    (cl:write-byte (cl:ldb (cl:byte 8 0) __ros_str_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 8) __ros_str_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 16) __ros_str_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 24) __ros_str_len) ostream))
+  (cl:map cl:nil #'(cl:lambda (c) (cl:write-byte (cl:char-code c) ostream)) ele))
+   (cl:slot-value msg 'predicate))
+  (cl:let ((__ros_arr_len (cl:length (cl:slot-value msg 'param1))))
+    (cl:write-byte (cl:ldb (cl:byte 8 0) __ros_arr_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 8) __ros_arr_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 16) __ros_arr_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 24) __ros_arr_len) ostream))
+  (cl:map cl:nil #'(cl:lambda (ele) (cl:let ((__ros_str_len (cl:length ele)))
+    (cl:write-byte (cl:ldb (cl:byte 8 0) __ros_str_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 8) __ros_str_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 16) __ros_str_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 24) __ros_str_len) ostream))
+  (cl:map cl:nil #'(cl:lambda (c) (cl:write-byte (cl:char-code c) ostream)) ele))
+   (cl:slot-value msg 'param1))
+  (cl:let ((__ros_arr_len (cl:length (cl:slot-value msg 'param2))))
+    (cl:write-byte (cl:ldb (cl:byte 8 0) __ros_arr_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 8) __ros_arr_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 16) __ros_arr_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 24) __ros_arr_len) ostream))
+  (cl:map cl:nil #'(cl:lambda (ele) (cl:let ((__ros_str_len (cl:length ele)))
+    (cl:write-byte (cl:ldb (cl:byte 8 0) __ros_str_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 8) __ros_str_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 16) __ros_str_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 24) __ros_str_len) ostream))
+  (cl:map cl:nil #'(cl:lambda (c) (cl:write-byte (cl:char-code c) ostream)) ele))
+   (cl:slot-value msg 'param2))
+  (cl:let ((__ros_arr_len (cl:length (cl:slot-value msg 'param3))))
+    (cl:write-byte (cl:ldb (cl:byte 8 0) __ros_arr_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 8) __ros_arr_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 16) __ros_arr_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 24) __ros_arr_len) ostream))
+  (cl:map cl:nil #'(cl:lambda (ele) (cl:let ((__ros_str_len (cl:length ele)))
+    (cl:write-byte (cl:ldb (cl:byte 8 0) __ros_str_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 8) __ros_str_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 16) __ros_str_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 24) __ros_str_len) ostream))
+  (cl:map cl:nil #'(cl:lambda (c) (cl:write-byte (cl:char-code c) ostream)) ele))
+   (cl:slot-value msg 'param3))
+  (cl:let ((__ros_arr_len (cl:length (cl:slot-value msg 'param4))))
+    (cl:write-byte (cl:ldb (cl:byte 8 0) __ros_arr_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 8) __ros_arr_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 16) __ros_arr_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 24) __ros_arr_len) ostream))
+  (cl:map cl:nil #'(cl:lambda (ele) (cl:let ((__ros_str_len (cl:length ele)))
+    (cl:write-byte (cl:ldb (cl:byte 8 0) __ros_str_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 8) __ros_str_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 16) __ros_str_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 24) __ros_str_len) ostream))
+  (cl:map cl:nil #'(cl:lambda (c) (cl:write-byte (cl:char-code c) ostream)) ele))
+   (cl:slot-value msg 'param4))
+)
+(cl:defmethod roslisp-msg-protocol:deserialize ((msg <PredicateService-request>) istream)
+  "Deserializes a message object of type '<PredicateService-request>"
+  (cl:let ((__ros_arr_len 0))
+    (cl:setf (cl:ldb (cl:byte 8 0) __ros_arr_len) (cl:read-byte istream))
+    (cl:setf (cl:ldb (cl:byte 8 8) __ros_arr_len) (cl:read-byte istream))
+    (cl:setf (cl:ldb (cl:byte 8 16) __ros_arr_len) (cl:read-byte istream))
+    (cl:setf (cl:ldb (cl:byte 8 24) __ros_arr_len) (cl:read-byte istream))
+  (cl:setf (cl:slot-value msg 'predicate) (cl:make-array __ros_arr_len))
+  (cl:let ((vals (cl:slot-value msg 'predicate)))
+    (cl:dotimes (i __ros_arr_len)
+    (cl:let ((__ros_str_len 0))
+      (cl:setf (cl:ldb (cl:byte 8 0) __ros_str_len) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 8) __ros_str_len) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 16) __ros_str_len) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 24) __ros_str_len) (cl:read-byte istream))
+      (cl:setf (cl:aref vals i) (cl:make-string __ros_str_len))
+      (cl:dotimes (__ros_str_idx __ros_str_len msg)
+        (cl:setf (cl:char (cl:aref vals i) __ros_str_idx) (cl:code-char (cl:read-byte istream))))))))
+  (cl:let ((__ros_arr_len 0))
+    (cl:setf (cl:ldb (cl:byte 8 0) __ros_arr_len) (cl:read-byte istream))
+    (cl:setf (cl:ldb (cl:byte 8 8) __ros_arr_len) (cl:read-byte istream))
+    (cl:setf (cl:ldb (cl:byte 8 16) __ros_arr_len) (cl:read-byte istream))
+    (cl:setf (cl:ldb (cl:byte 8 24) __ros_arr_len) (cl:read-byte istream))
+  (cl:setf (cl:slot-value msg 'param1) (cl:make-array __ros_arr_len))
+  (cl:let ((vals (cl:slot-value msg 'param1)))
+    (cl:dotimes (i __ros_arr_len)
+    (cl:let ((__ros_str_len 0))
+      (cl:setf (cl:ldb (cl:byte 8 0) __ros_str_len) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 8) __ros_str_len) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 16) __ros_str_len) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 24) __ros_str_len) (cl:read-byte istream))
+      (cl:setf (cl:aref vals i) (cl:make-string __ros_str_len))
+      (cl:dotimes (__ros_str_idx __ros_str_len msg)
+        (cl:setf (cl:char (cl:aref vals i) __ros_str_idx) (cl:code-char (cl:read-byte istream))))))))
+  (cl:let ((__ros_arr_len 0))
+    (cl:setf (cl:ldb (cl:byte 8 0) __ros_arr_len) (cl:read-byte istream))
+    (cl:setf (cl:ldb (cl:byte 8 8) __ros_arr_len) (cl:read-byte istream))
+    (cl:setf (cl:ldb (cl:byte 8 16) __ros_arr_len) (cl:read-byte istream))
+    (cl:setf (cl:ldb (cl:byte 8 24) __ros_arr_len) (cl:read-byte istream))
+  (cl:setf (cl:slot-value msg 'param2) (cl:make-array __ros_arr_len))
+  (cl:let ((vals (cl:slot-value msg 'param2)))
+    (cl:dotimes (i __ros_arr_len)
+    (cl:let ((__ros_str_len 0))
+      (cl:setf (cl:ldb (cl:byte 8 0) __ros_str_len) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 8) __ros_str_len) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 16) __ros_str_len) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 24) __ros_str_len) (cl:read-byte istream))
+      (cl:setf (cl:aref vals i) (cl:make-string __ros_str_len))
+      (cl:dotimes (__ros_str_idx __ros_str_len msg)
+        (cl:setf (cl:char (cl:aref vals i) __ros_str_idx) (cl:code-char (cl:read-byte istream))))))))
+  (cl:let ((__ros_arr_len 0))
+    (cl:setf (cl:ldb (cl:byte 8 0) __ros_arr_len) (cl:read-byte istream))
+    (cl:setf (cl:ldb (cl:byte 8 8) __ros_arr_len) (cl:read-byte istream))
+    (cl:setf (cl:ldb (cl:byte 8 16) __ros_arr_len) (cl:read-byte istream))
+    (cl:setf (cl:ldb (cl:byte 8 24) __ros_arr_len) (cl:read-byte istream))
+  (cl:setf (cl:slot-value msg 'param3) (cl:make-array __ros_arr_len))
+  (cl:let ((vals (cl:slot-value msg 'param3)))
+    (cl:dotimes (i __ros_arr_len)
+    (cl:let ((__ros_str_len 0))
+      (cl:setf (cl:ldb (cl:byte 8 0) __ros_str_len) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 8) __ros_str_len) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 16) __ros_str_len) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 24) __ros_str_len) (cl:read-byte istream))
+      (cl:setf (cl:aref vals i) (cl:make-string __ros_str_len))
+      (cl:dotimes (__ros_str_idx __ros_str_len msg)
+        (cl:setf (cl:char (cl:aref vals i) __ros_str_idx) (cl:code-char (cl:read-byte istream))))))))
+  (cl:let ((__ros_arr_len 0))
+    (cl:setf (cl:ldb (cl:byte 8 0) __ros_arr_len) (cl:read-byte istream))
+    (cl:setf (cl:ldb (cl:byte 8 8) __ros_arr_len) (cl:read-byte istream))
+    (cl:setf (cl:ldb (cl:byte 8 16) __ros_arr_len) (cl:read-byte istream))
+    (cl:setf (cl:ldb (cl:byte 8 24) __ros_arr_len) (cl:read-byte istream))
+  (cl:setf (cl:slot-value msg 'param4) (cl:make-array __ros_arr_len))
+  (cl:let ((vals (cl:slot-value msg 'param4)))
+    (cl:dotimes (i __ros_arr_len)
+    (cl:let ((__ros_str_len 0))
+      (cl:setf (cl:ldb (cl:byte 8 0) __ros_str_len) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 8) __ros_str_len) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 16) __ros_str_len) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 24) __ros_str_len) (cl:read-byte istream))
+      (cl:setf (cl:aref vals i) (cl:make-string __ros_str_len))
+      (cl:dotimes (__ros_str_idx __ros_str_len msg)
+        (cl:setf (cl:char (cl:aref vals i) __ros_str_idx) (cl:code-char (cl:read-byte istream))))))))
+  msg
+)
+(cl:defmethod roslisp-msg-protocol:ros-datatype ((msg (cl:eql '<PredicateService-request>)))
+  "Returns string type for a service object of type '<PredicateService-request>"
+  "rosjava_custom_srv/PredicateServiceRequest")
+(cl:defmethod roslisp-msg-protocol:ros-datatype ((msg (cl:eql 'PredicateService-request)))
+  "Returns string type for a service object of type 'PredicateService-request"
+  "rosjava_custom_srv/PredicateServiceRequest")
+(cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql '<PredicateService-request>)))
+  "Returns md5sum for a message object of type '<PredicateService-request>"
+  "aedf4a39ef72018907356ccb3fd7b3f3")
+(cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql 'PredicateService-request)))
+  "Returns md5sum for a message object of type 'PredicateService-request"
+  "aedf4a39ef72018907356ccb3fd7b3f3")
+(cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql '<PredicateService-request>)))
+  "Returns full string definition for message of type '<PredicateService-request>"
+  (cl:format cl:nil "string[] predicate~%string[] param1~%string[] param2~%string[] param3~%string[] param4~%~%~%"))
+(cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql 'PredicateService-request)))
+  "Returns full string definition for message of type 'PredicateService-request"
+  (cl:format cl:nil "string[] predicate~%string[] param1~%string[] param2~%string[] param3~%string[] param4~%~%~%"))
+(cl:defmethod roslisp-msg-protocol:serialization-length ((msg <PredicateService-request>))
+  (cl:+ 0
+     4 (cl:reduce #'cl:+ (cl:slot-value msg 'predicate) :key #'(cl:lambda (ele) (cl:declare (cl:ignorable ele)) (cl:+ 4 (cl:length ele))))
+     4 (cl:reduce #'cl:+ (cl:slot-value msg 'param1) :key #'(cl:lambda (ele) (cl:declare (cl:ignorable ele)) (cl:+ 4 (cl:length ele))))
+     4 (cl:reduce #'cl:+ (cl:slot-value msg 'param2) :key #'(cl:lambda (ele) (cl:declare (cl:ignorable ele)) (cl:+ 4 (cl:length ele))))
+     4 (cl:reduce #'cl:+ (cl:slot-value msg 'param3) :key #'(cl:lambda (ele) (cl:declare (cl:ignorable ele)) (cl:+ 4 (cl:length ele))))
+     4 (cl:reduce #'cl:+ (cl:slot-value msg 'param4) :key #'(cl:lambda (ele) (cl:declare (cl:ignorable ele)) (cl:+ 4 (cl:length ele))))
+))
+(cl:defmethod roslisp-msg-protocol:ros-message-to-list ((msg <PredicateService-request>))
+  "Converts a ROS message object to a list"
+  (cl:list 'PredicateService-request
+    (cl:cons ':predicate (predicate msg))
+    (cl:cons ':param1 (param1 msg))
+    (cl:cons ':param2 (param2 msg))
+    (cl:cons ':param3 (param3 msg))
+    (cl:cons ':param4 (param4 msg))
+))
+;//! \htmlinclude PredicateService-response.msg.html
+
+(cl:defclass <PredicateService-response> (roslisp-msg-protocol:ros-message)
+  ((result
+    :reader result
+    :initarg :result
+    :type cl:integer
+    :initform 0))
+)
+
+(cl:defclass PredicateService-response (<PredicateService-response>)
+  ())
+
+(cl:defmethod cl:initialize-instance :after ((m <PredicateService-response>) cl:&rest args)
+  (cl:declare (cl:ignorable args))
+  (cl:unless (cl:typep m 'PredicateService-response)
+    (roslisp-msg-protocol:msg-deprecation-warning "using old message class name rosjava_custom_srv-srv:<PredicateService-response> is deprecated: use rosjava_custom_srv-srv:PredicateService-response instead.")))
+
+(cl:ensure-generic-function 'result-val :lambda-list '(m))
+(cl:defmethod result-val ((m <PredicateService-response>))
+  (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader rosjava_custom_srv-srv:result-val is deprecated.  Use rosjava_custom_srv-srv:result instead.")
+  (result m))
+(cl:defmethod roslisp-msg-protocol:serialize ((msg <PredicateService-response>) ostream)
+  "Serializes a message object of type '<PredicateService-response>"
+  (cl:let* ((signed (cl:slot-value msg 'result)) (unsigned (cl:if (cl:< signed 0) (cl:+ signed 4294967296) signed)))
+    (cl:write-byte (cl:ldb (cl:byte 8 0) unsigned) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 8) unsigned) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 16) unsigned) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 24) unsigned) ostream)
+    )
+)
+(cl:defmethod roslisp-msg-protocol:deserialize ((msg <PredicateService-response>) istream)
+  "Deserializes a message object of type '<PredicateService-response>"
+    (cl:let ((unsigned 0))
+      (cl:setf (cl:ldb (cl:byte 8 0) unsigned) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 8) unsigned) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 16) unsigned) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 24) unsigned) (cl:read-byte istream))
+      (cl:setf (cl:slot-value msg 'result) (cl:if (cl:< unsigned 2147483648) unsigned (cl:- unsigned 4294967296))))
+  msg
+)
+(cl:defmethod roslisp-msg-protocol:ros-datatype ((msg (cl:eql '<PredicateService-response>)))
+  "Returns string type for a service object of type '<PredicateService-response>"
+  "rosjava_custom_srv/PredicateServiceResponse")
+(cl:defmethod roslisp-msg-protocol:ros-datatype ((msg (cl:eql 'PredicateService-response)))
+  "Returns string type for a service object of type 'PredicateService-response"
+  "rosjava_custom_srv/PredicateServiceResponse")
+(cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql '<PredicateService-response>)))
+  "Returns md5sum for a message object of type '<PredicateService-response>"
+  "aedf4a39ef72018907356ccb3fd7b3f3")
+(cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql 'PredicateService-response)))
+  "Returns md5sum for a message object of type 'PredicateService-response"
+  "aedf4a39ef72018907356ccb3fd7b3f3")
+(cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql '<PredicateService-response>)))
+  "Returns full string definition for message of type '<PredicateService-response>"
+  (cl:format cl:nil "int32 result~%~%~%~%"))
+(cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql 'PredicateService-response)))
+  "Returns full string definition for message of type 'PredicateService-response"
+  (cl:format cl:nil "int32 result~%~%~%~%"))
+(cl:defmethod roslisp-msg-protocol:serialization-length ((msg <PredicateService-response>))
+  (cl:+ 0
+     4
+))
+(cl:defmethod roslisp-msg-protocol:ros-message-to-list ((msg <PredicateService-response>))
+  "Converts a ROS message object to a list"
+  (cl:list 'PredicateService-response
+    (cl:cons ':result (result msg))
+))
+(cl:defmethod roslisp-msg-protocol:service-request-type ((msg (cl:eql 'PredicateService)))
+  'PredicateService-request)
+(cl:defmethod roslisp-msg-protocol:service-response-type ((msg (cl:eql 'PredicateService)))
+  'PredicateService-response)
+(cl:defmethod roslisp-msg-protocol:ros-datatype ((msg (cl:eql 'PredicateService)))
+  "Returns string type for a service object of type '<PredicateService>"
+  "rosjava_custom_srv/PredicateService")

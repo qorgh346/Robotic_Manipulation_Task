@@ -1,0 +1,8 @@
+prefix=/home/test/Downloads/190816_cmtm_code/catkin_ws/install
+
+Name: rosjava_custom_srv
+Description: Description of rosjava_custom_srv
+Version: 0.1.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib 
+Requires: message_generation message_runtime std_msgs vision_msgs moveit_msgs

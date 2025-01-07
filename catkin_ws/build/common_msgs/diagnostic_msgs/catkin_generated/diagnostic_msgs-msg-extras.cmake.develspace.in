@@ -1,0 +1,2 @@
+set(diagnostic_msgs_MESSAGE_FILES "/home/test/Downloads/190816_cmtm_code/catkin_ws/src/common_msgs/diagnostic_msgs/msg/DiagnosticArray.msg;/home/test/Downloads/190816_cmtm_code/catkin_ws/src/common_msgs/diagnostic_msgs/msg/DiagnosticStatus.msg;/home/test/Downloads/190816_cmtm_code/catkin_ws/src/common_msgs/diagnostic_msgs/msg/KeyValue.msg")
+set(diagnostic_msgs_SERVICE_FILES "/home/test/Downloads/190816_cmtm_code/catkin_ws/src/common_msgs/diagnostic_msgs/srv/AddDiagnostics.srv;/home/test/Downloads/190816_cmtm_code/catkin_ws/src/common_msgs/diagnostic_msgs/srv/SelfTest.srv")

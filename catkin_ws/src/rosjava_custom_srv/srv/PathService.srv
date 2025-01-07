@@ -1,0 +1,7 @@
+string predicate
+string param1
+ActionGoalMsg param2
+ActionGoalMsg[] param3
+string param4
+---
+int32 result
