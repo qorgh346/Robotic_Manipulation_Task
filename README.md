@@ -2,7 +2,7 @@
  학부연구생_로봇 지능 체계 실습 프로젝트
 
 ## Project Description
-This project implements a robotic intelligence system supporting object detection and 6-DoF pose estimation for the Kinova Jaco Hand, along with path planning, obstacle avoidance, task planning, and management. The system is designed to work in conjunction with simulation environments like CoppeliaSim.
+이 프로젝트는 로봇(Kinova, Jaco Hand)의 객체 인식 및 6-DoF 추정, 경로 계획, 장애물 회피, 작업 계획 수립 및 관리 등을 지원하는 로봇 지능 체계 시스템입니다.
 
 ## Features
 - **객체 인식**: Dope 모델 기반
