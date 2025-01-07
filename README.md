@@ -1,6 +1,6 @@
 # Robot Intelligence System
  학부연구생_로봇 지능 체계 실습 프로젝트
- 
+
 ## Project Description
 This project implements a robotic intelligence system supporting object detection and 6-DoF pose estimation for the Kinova Jaco Hand, along with path planning, obstacle avoidance, task planning, and management. The system is designed to work in conjunction with simulation environments like CoppeliaSim.
 
@@ -22,7 +22,7 @@ This project implements a robotic intelligence system supporting object detectio
 ### Installation Steps
 
 #### **1. Start ROS Master**
-1. Navigate to your catkin workspace:
+1. catkin workspace:
     ```bash
     cd Robotic_Manipulation_Task/catkin_ws
     source devel/setup.bash
@@ -33,7 +33,7 @@ This project implements a robotic intelligence system supporting object detectio
     ```
 
 #### **2. Start CoppeliaSim**
-1. Navigate to the CoppeliaSim installation directory:
+1. CoppeliaSim installation :
     ```bash
     cd ~/Downloads/CoppeliaSim_Edu_V4_2_0_Ubuntu16_04
     ```
@@ -45,11 +45,11 @@ This project implements a robotic intelligence system supporting object detectio
     - In CoppeliaSim, go to **File > Open Scene** and select the file from the project directory.
 
 #### **3. Download & Build Dope**
-1. Activate your Python environment:
+1. Activate Python:
     ```bash
     conda activate dope_env
     ```
-2. Clone the Dope repository into the `src` directory of your catkin workspace:
+2. Clone the Dope repository:
     ```bash
     cd ~/Robotic_Manipulation_Task/catkin_ws/src
     git clone https://github.com/NVlabs/Deep_Object_Pose.git dope
@@ -68,37 +68,37 @@ This project implements a robotic intelligence system supporting object detectio
     ```
 
 #### **4. Start Dope Node**
-1. Launch the Dope node with the appropriate configuration file:
+1. Launch the Dope node:
     ```bash
     roslaunch dope dope.launch config:=/path/to/PM/dope_config.yaml
     ```
 
 #### **5. Start Context Manager (CM)**
-1. Run the Context Manager and Listener nodes:
+1. Run Context Manager and Listener nodes:
     ```bash
     rosrun context_manager_pkg context_manager org.ros.rosjava_context_manager.ContextManager
     rosrun context_manager_pkg context_manager org.ros.rosjava_context_manager.ContextListener
     ```
 
 #### **6. Start Action Manager (AM)**
-1. Execute the pick-and-place demo:
+1. pick-and-place demo:
     ```bash
     cd ~/Robotic_Manipulation_Task/catkin_ws/src
     rosrun kinova_arm_moveit_demo pick_place
     ```
 
 #### **7. Start Task Manager (TM)**
-1. Run the TAMP interface:
+1. Run TAMP interface:
     ```bash
     rosrun task_manager TAMP_interface.py
     ```
-2. Start the Task Manager:
+2. Start Task Manager:
     ```bash
     rosrun task_manager task_manager org.ros.rosjava_task_manager.TaskManager
     ```
 
 #### **8. Start Plan Library Jam (Jam)**
-1. Start the Jam service for task planning:
+1. Start Jam for task planning:
     ```bash
     rosservice call /task_manager/jam_service "path: /path/to/Robotic_Manipulation_Task/Jam"
     ```
