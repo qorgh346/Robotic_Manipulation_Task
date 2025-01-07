@@ -106,3 +106,8 @@
 ---
 
 
+## Project Demo
+
+<video controls>
+  <source src="media/Demo.mp4" type="video/mp4">
+</video>
