@@ -108,6 +108,4 @@
 
 ## Project Demo
 
-<video controls>
-  <source src="media/Demo.mp4" type="video/mp4">
-</video>
+[![Project Demo](https://img.youtube.com/vi/JC5zS8w5jUM/0.jpg)](https://www.youtube.com/watch?v=JC5zS8w5jUM)
